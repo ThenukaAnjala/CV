@@ -50,7 +50,7 @@ function addIssue(issues: AtsIssue[], issue: Omit<AtsIssue, "id">): void {
 function identityScore(resume: ResumeData, issues: AtsIssue[]): number {
   let score = 0;
   if (hasText(resume.personal.fullName)) score += 5;
-  else addIssue(issues, { severity: "error", title: "Add your full name", description: "A full name is required before exporting.", section: "Personal Information" });
+  else addIssue(issues, { severity: "error", title: "Add your full name", description: "A full name helps recruiters and parsers identify the resume owner.", section: "Personal Information" });
 
   if (hasText(resume.personal.email) || hasText(resume.personal.phone) || hasText(resume.personal.website) || resume.personal.links.length > 0) score += 5;
   else addIssue(issues, { severity: "warning", title: "Add contact information", description: "Include at least one email, phone, website, or profile link.", section: "Personal Information" });

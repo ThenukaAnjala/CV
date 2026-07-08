@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { ResumeBuilder } from "./ResumeBuilder";
 import { APP_DEVELOPER } from "@/constants/app";
 
@@ -25,6 +26,18 @@ describe("ResumeBuilder browser workflows", () => {
     fireEvent.change(screen.getByLabelText("Full name"), { target: { value: "Example Candidate" } });
 
     expect(screen.getByLabelText("Full name")).toHaveValue("Example Candidate");
+  });
+
+  it("keeps repeated-section field focus while typing", async () => {
+    const user = userEvent.setup();
+    render(<ResumeBuilder />);
+
+    await user.click(screen.getByRole("button", { name: "Education" }));
+    await user.click(screen.getByRole("button", { name: "Add education" }));
+    await user.type(screen.getByLabelText("Institution"), "MIT");
+
+    expect(screen.getByLabelText("Institution")).toHaveValue("MIT");
+    expect(screen.getByLabelText("Institution")).toHaveFocus();
   });
 
   it("resets after confirmation", async () => {

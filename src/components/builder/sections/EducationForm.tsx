@@ -27,14 +27,14 @@ export function EducationForm() {
         <SectionCard
           actions={<RepeatedItemControls disableMoveDown={index === items.length - 1} disableMoveUp={index === 0} hidden={item.hidden} itemLabel={`Education ${index + 1}`} onDelete={() => setItems(items.filter((_, itemIndex) => itemIndex !== index))} onDuplicate={() => setItems([...items.slice(0, index + 1), cloneEducation(item), ...items.slice(index + 1)])} onMoveDown={() => setItems(moveItem(items, index, 1))} onMoveUp={() => setItems(moveItem(items, index, -1))} onToggleHidden={() => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, hidden: !entry.hidden } : entry))} />}
           key={item.id}
-          title={item.qualification || item.institution || `Education ${index + 1}`}
+          title={`Education ${index + 1}`}
         >
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field name={`education.${index}.qualification`} label="Qualification" placeholder="Degree or qualification" />
-            <Field name={`education.${index}.institution`} label="Institution" placeholder="Institution Name" />
-            <Field name={`education.${index}.location`} label="Location" placeholder="City, State" />
-            <Field name={`education.${index}.startDate`} label="Start date" placeholder="Jan 2025" />
-            <Field name={`education.${index}.endDate`} label="End date" placeholder="Dec 2025" />
+            {renderField(`education.${index}.qualification`, "Qualification", "Degree or qualification")}
+            {renderField(`education.${index}.institution`, "Institution", "Institution Name")}
+            {renderField(`education.${index}.location`, "Location", "City, State")}
+            {renderField(`education.${index}.startDate`, "Start date", "Jan 2025")}
+            {renderField(`education.${index}.endDate`, "End date", "Dec 2025")}
           </div>
           <BulletFields
             bullets={item.details}
@@ -49,7 +49,7 @@ export function EducationForm() {
     </SectionCard>
   );
 
-  function Field({ name, label, placeholder }: { name: string; label: string; placeholder: string }) {
+  function renderField(name: string, label: string, placeholder: string) {
     const path = name as Path<ResumeData>;
     return <Input error={getFieldError(errors, path)} label={label} placeholder={placeholder} {...register(path)} />;
   }

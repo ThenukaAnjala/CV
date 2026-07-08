@@ -19,19 +19,19 @@ export function CertificationsForm() {
     <SectionCard actions={<Button icon={<Plus aria-hidden size={16} />} onClick={() => setItems([...items, createBlankCertification()])} size="sm">Add certification</Button>} description="Certification URLs are exported as real links when valid." title="Certifications">
       {items.length === 0 ? <EmptyState title="No certifications added" description="Add certifications only when they truthfully apply." /> : null}
       {items.map((item, index) => (
-        <SectionCard actions={<RepeatedItemControls disableMoveDown={index === items.length - 1} disableMoveUp={index === 0} hidden={item.hidden} itemLabel={`Certification ${index + 1}`} onDelete={() => setItems(items.filter((_, itemIndex) => itemIndex !== index))} onDuplicate={() => setItems([...items.slice(0, index + 1), cloneCertification(item), ...items.slice(index + 1)])} onMoveDown={() => setItems(moveItem(items, index, 1))} onMoveUp={() => setItems(moveItem(items, index, -1))} onToggleHidden={() => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, hidden: !entry.hidden } : entry))} />} key={item.id} title={item.name || `Certification ${index + 1}`}>
+        <SectionCard actions={<RepeatedItemControls disableMoveDown={index === items.length - 1} disableMoveUp={index === 0} hidden={item.hidden} itemLabel={`Certification ${index + 1}`} onDelete={() => setItems(items.filter((_, itemIndex) => itemIndex !== index))} onDuplicate={() => setItems([...items.slice(0, index + 1), cloneCertification(item), ...items.slice(index + 1)])} onMoveDown={() => setItems(moveItem(items, index, 1))} onMoveUp={() => setItems(moveItem(items, index, -1))} onToggleHidden={() => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, hidden: !entry.hidden } : entry))} />} key={item.id} title={`Certification ${index + 1}`}>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field name={`certifications.${index}.name`} label="Certification name" placeholder="Certification Name" />
-            <Field name={`certifications.${index}.issuer`} label="Issuer" placeholder="Issuer Name" />
-            <Field name={`certifications.${index}.year`} label="Year" placeholder="2025" />
-            <Field name={`certifications.${index}.credentialUrl`} label="Credential URL" placeholder="https://example.com" />
+            {renderField(`certifications.${index}.name`, "Certification name", "Certification Name")}
+            {renderField(`certifications.${index}.issuer`, "Issuer", "Issuer Name")}
+            {renderField(`certifications.${index}.year`, "Year", "2025")}
+            {renderField(`certifications.${index}.credentialUrl`, "Credential URL", "https://example.com")}
           </div>
         </SectionCard>
       ))}
     </SectionCard>
   );
 
-  function Field({ name, label, placeholder }: { name: string; label: string; placeholder: string }) {
+  function renderField(name: string, label: string, placeholder: string) {
     const path = name as Path<ResumeData>;
     return <Input error={getFieldError(errors, path)} label={label} placeholder={placeholder} {...register(path)} />;
   }

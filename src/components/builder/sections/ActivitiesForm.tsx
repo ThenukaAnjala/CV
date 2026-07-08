@@ -20,11 +20,11 @@ export function ActivitiesForm() {
     <SectionCard actions={<Button icon={<Plus aria-hidden size={16} />} onClick={() => setItems([...items, createBlankActivity()])} size="sm">Add activity</Button>} description="Use this for leadership, volunteering, campus roles, or relevant activities." title="Leadership and Activities">
       {items.length === 0 ? <EmptyState title="No activities added" description="Add activities only when relevant and truthful." /> : null}
       {items.map((item, index) => (
-        <SectionCard actions={<RepeatedItemControls disableMoveDown={index === items.length - 1} disableMoveUp={index === 0} hidden={item.hidden} itemLabel={`Activity ${index + 1}`} onDelete={() => setItems(items.filter((_, itemIndex) => itemIndex !== index))} onDuplicate={() => setItems([...items.slice(0, index + 1), cloneActivity(item), ...items.slice(index + 1)])} onMoveDown={() => setItems(moveItem(items, index, 1))} onMoveUp={() => setItems(moveItem(items, index, -1))} onToggleHidden={() => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, hidden: !entry.hidden } : entry))} />} key={item.id} title={item.role || item.organization || `Activity ${index + 1}`}>
+        <SectionCard actions={<RepeatedItemControls disableMoveDown={index === items.length - 1} disableMoveUp={index === 0} hidden={item.hidden} itemLabel={`Activity ${index + 1}`} onDelete={() => setItems(items.filter((_, itemIndex) => itemIndex !== index))} onDuplicate={() => setItems([...items.slice(0, index + 1), cloneActivity(item), ...items.slice(index + 1)])} onMoveDown={() => setItems(moveItem(items, index, 1))} onMoveUp={() => setItems(moveItem(items, index, -1))} onToggleHidden={() => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, hidden: !entry.hidden } : entry))} />} key={item.id} title={`Activity ${index + 1}`}>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field name={`activities.${index}.role`} label="Role" placeholder="Role" />
-            <Field name={`activities.${index}.organization`} label="Organization" placeholder="Organization Name" />
-            <Field name={`activities.${index}.year`} label="Year" placeholder="2025" />
+            {renderField(`activities.${index}.role`, "Role", "Role")}
+            {renderField(`activities.${index}.organization`, "Organization", "Organization Name")}
+            {renderField(`activities.${index}.year`, "Year", "2025")}
           </div>
           <BulletFields bullets={item.bullets} fieldPrefix={`activities.${index}.bullets`} label="Activity bullets" onAdd={() => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, bullets: [...entry.bullets, createBlankBullet()] } : entry))} onDelete={(bulletIndex) => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, bullets: entry.bullets.filter((_, i) => i !== bulletIndex) } : entry))} onMove={(bulletIndex, direction) => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, bullets: moveItem(entry.bullets, bulletIndex, direction) } : entry))} />
         </SectionCard>
@@ -32,7 +32,7 @@ export function ActivitiesForm() {
     </SectionCard>
   );
 
-  function Field({ name, label, placeholder }: { name: string; label: string; placeholder: string }) {
+  function renderField(name: string, label: string, placeholder: string) {
     const path = name as Path<ResumeData>;
     return <Input error={getFieldError(errors, path)} label={label} placeholder={placeholder} {...register(path)} />;
   }

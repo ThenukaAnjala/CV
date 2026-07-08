@@ -29,7 +29,7 @@ export async function createResumeDocxBlob(data: ResumeData): Promise<Blob> {
             {
               level: 0,
               format: LevelFormat.BULLET,
-              text: "•",
+              text: "\u2022",
               alignment: AlignmentType.LEFT,
               style: { paragraph: { indent: { left: 360, hanging: 180 } } }
             }
