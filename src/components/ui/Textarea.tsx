@@ -1,0 +1,33 @@
+import type { TextareaHTMLAttributes } from "react";
+import { cn } from "@/lib/ui/cn";
+import { FormError } from "./FormError";
+
+type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  label: string;
+  error?: string;
+  description?: string;
+};
+
+export function Textarea({ label, error, description, className, id, rows = 4, ...props }: TextareaProps) {
+  const inputId = id ?? props.name;
+  const errorId = error && inputId ? `${inputId}-error` : undefined;
+
+  return (
+    <label className="block text-sm font-medium text-slate-800" htmlFor={inputId}>
+      {label}
+      {description ? <span className="mt-1 block text-xs font-normal text-slate-500">{description}</span> : null}
+      <textarea
+        aria-describedby={errorId}
+        aria-invalid={Boolean(error)}
+        className={cn(
+          "mt-1 block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-blue-700 focus:ring-2 focus:ring-blue-100",
+          className
+        )}
+        id={inputId}
+        rows={rows}
+        {...props}
+      />
+      <FormError id={errorId} message={error} />
+    </label>
+  );
+}

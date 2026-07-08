@@ -1,0 +1,47 @@
+"use client";
+
+import { Download } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { downloadBlob } from "@/lib/download";
+import { getResumeExportFilename } from "@/lib/resume/filename";
+import { validateResumeForExport } from "@/lib/resume/validation";
+import type { ResumeData } from "@/types/resume";
+
+export function PdfDownloadButton({
+  data,
+  busy,
+  setBusy,
+  onStatus
+}: {
+  data: ResumeData;
+  busy: boolean;
+  setBusy: (value: boolean) => void;
+  onStatus: (message: string, tone: "neutral" | "success" | "error") => void;
+}) {
+  async function handleDownload() {
+    const validationError = validateResumeForExport(data);
+    if (validationError) {
+      onStatus(validationError, "error");
+      return;
+    }
+
+    setBusy(true);
+    onStatus("Preparing PDF...", "neutral");
+    try {
+      const { createResumePdfBlob } = await import("@/lib/export/createPdf");
+      const blob = await createResumePdfBlob(data);
+      downloadBlob(blob, getResumeExportFilename(data, "pdf"));
+      onStatus("PDF ready", "success");
+    } catch {
+      onStatus("PDF generation failed. Your current edits remain only on this page.", "error");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Button disabled={busy} icon={<Download aria-hidden size={16} />} onClick={handleDownload} variant="primary">
+      Download PDF
+    </Button>
+  );
+}
