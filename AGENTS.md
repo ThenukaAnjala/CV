@@ -25,7 +25,7 @@ Follow these principles throughout the project:
 7. Strong TypeScript typing.
 8. Predictable folder and component structure.
 9. Small focused files.
-10. No personal data hardcoded in source code.
+10. No resume/user personal data hardcoded in source code, except explicitly requested public developer attribution.
 
 ---
 
@@ -48,6 +48,8 @@ Do not:
 - Include real personal data in screenshots
 - Include real personal data in documentation
 - Include real personal data in Git history
+
+Explicitly requested public developer attribution may include the developer-provided name and contact email. Treat it as app attribution, never as resume content, fixtures, logs, analytics, or user data.
 
 All resume processing must remain in the browser and must stay in memory only while the page is open.
 

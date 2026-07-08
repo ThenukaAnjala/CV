@@ -4,6 +4,7 @@ import { FileJson, RotateCcw, Upload } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { StatusMessage } from "@/components/ui/StatusMessage";
 import { ExportActions } from "@/components/export/ExportActions";
+import { APP_DEVELOPER } from "@/constants/app";
 import type { ResumeData } from "@/types/resume";
 
 export type PrivacyStatus = {
@@ -35,6 +36,12 @@ export function BuilderHeader({
           <div>
             <h1 className="text-xl font-semibold text-slate-950">ATS Resume Builder</h1>
             <p className="mt-1 text-sm text-slate-600">Resume data is held only in memory for this open page. Nothing is autosaved or uploaded.</p>
+            <p className="mt-1 text-xs font-medium text-slate-500">
+              Developed by {APP_DEVELOPER.name} ·{" "}
+              <a className="text-blue-700 underline-offset-2 hover:underline focus:outline-none focus:ring-2 focus:ring-blue-200" href={`mailto:${APP_DEVELOPER.email}`}>
+                {APP_DEVELOPER.email}
+              </a>
+            </p>
           </div>
           <StatusMessage tone={status.tone}>{status.message}</StatusMessage>
         </div>

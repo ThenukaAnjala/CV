@@ -1,11 +1,22 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { ResumeBuilder } from "./ResumeBuilder";
+import { APP_DEVELOPER } from "@/constants/app";
 
 describe("ResumeBuilder browser workflows", () => {
   it("shows the no-autosave privacy status", () => {
     render(<ResumeBuilder />);
 
     expect(screen.getByText(/No autosave is active/i)).toBeInTheDocument();
+  });
+
+  it("shows the public developer attribution", () => {
+    render(<ResumeBuilder />);
+
+    expect(screen.getByText(new RegExp(APP_DEVELOPER.name, "i"))).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: APP_DEVELOPER.email })).toHaveAttribute(
+      "href",
+      `mailto:${APP_DEVELOPER.email}`
+    );
   });
 
   it("keeps edits on the current page", () => {

@@ -2,6 +2,12 @@
 
 Create, check, and export an ATS-friendly resume locally in your browser.
 
+## Developer
+
+Developed by THENUKA GUNASEKARA.
+
+Contact: thenukaanjala@gmail.com
+
 ## Features
 
 - Structured resume editor for personal information, summary, education, experience, projects, skills, certifications, and activities
