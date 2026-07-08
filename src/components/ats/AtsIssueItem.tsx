@@ -3,14 +3,14 @@ import { cn } from "@/lib/ui/cn";
 
 export function AtsIssueItem({ issue }: { issue: AtsIssue }) {
   return (
-    <li className="rounded-md border border-slate-200 bg-white p-3">
+    <li className="rounded-md border border-slate-200 bg-slate-50 p-3">
       <div className="flex flex-wrap items-center gap-2">
         <span
           className={cn(
             "rounded px-2 py-0.5 text-xs font-semibold uppercase",
             issue.severity === "error" && "bg-red-50 text-red-700",
             issue.severity === "warning" && "bg-amber-50 text-amber-800",
-            issue.severity === "info" && "bg-blue-50 text-blue-700"
+            issue.severity === "info" && "bg-sky-50 text-sky-700"
           )}
         >
           {issue.severity}

@@ -9,7 +9,7 @@ export function KeywordList({ title, keywords, emptyLabel }: { title: string; ke
       ) : (
         <ul className="mt-2 flex flex-wrap gap-2">
           {keywords.slice(0, 30).map((keyword) => (
-            <li className="rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-800" key={keyword.term}>
+            <li className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-800 shadow-sm" key={keyword.term}>
               {keyword.term} <span className="text-slate-500">x{keyword.count}</span>
             </li>
           ))}

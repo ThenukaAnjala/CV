@@ -25,8 +25,11 @@ export function JobDescriptionMatcher({ data }: { data: ResumeData }) {
           value={description}
         />
       </div>
-      <div className="mt-4 rounded-md bg-slate-100 p-3">
+      <div className="mt-4 rounded-md border border-slate-200 bg-slate-50 p-3">
         <p className="text-sm font-semibold text-slate-950">Match estimate: {result.matchScore}%</p>
+        <div className="mt-2 h-2 rounded-full bg-white" aria-label={`Keyword match ${result.matchScore} percent`}>
+          <div className="h-2 rounded-full bg-sky-700" style={{ width: `${result.matchScore}%` }} />
+        </div>
         <p className="mt-1 text-sm text-slate-700">
           Only add a missing keyword when it truthfully represents your experience, education, project work, or skills.
         </p>

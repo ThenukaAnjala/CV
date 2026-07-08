@@ -5,7 +5,7 @@ export type MobileMode = "edit" | "preview";
 
 export function MobileBuilderTabs({ mode, onModeChange }: { mode: MobileMode; onModeChange: (mode: MobileMode) => void }) {
   return (
-    <div className="grid grid-cols-2 gap-2 rounded-lg border border-slate-200 bg-white p-2 lg:hidden">
+    <div className="grid grid-cols-2 gap-2 rounded-lg border border-slate-200 bg-white p-2 shadow-sm lg:hidden">
       <Button icon={<Pencil aria-hidden size={16} />} onClick={() => onModeChange("edit")} variant={mode === "edit" ? "primary" : "secondary"}>
         Edit
       </Button>

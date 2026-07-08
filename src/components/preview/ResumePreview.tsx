@@ -30,7 +30,7 @@ export function ResumePreview({ data }: { data: ResumeData }) {
         />
       </div>
       <OverflowNotice show={pageCount > 1} />
-      <div className="overflow-auto rounded-lg bg-slate-200 p-4">
+      <div className="max-h-[calc(100vh-13rem)] overflow-auto rounded-lg border border-slate-300 bg-slate-300 p-4 shadow-inner">
         <div
           className="mx-auto origin-top"
           style={{

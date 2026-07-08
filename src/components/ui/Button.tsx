@@ -11,10 +11,10 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variants: Record<ButtonVariant, string> = {
-  primary: "border-blue-700 bg-blue-700 text-white hover:bg-blue-800",
-  secondary: "border-slate-300 bg-white text-slate-900 hover:bg-slate-50",
-  ghost: "border-transparent bg-transparent text-slate-700 hover:bg-slate-100",
-  danger: "border-red-700 bg-red-700 text-white hover:bg-red-800"
+  primary: "border-sky-700 bg-sky-700 text-white shadow-sm hover:bg-sky-800",
+  secondary: "border-slate-300 bg-white text-slate-900 shadow-sm hover:border-slate-400 hover:bg-slate-50",
+  ghost: "border-transparent bg-transparent text-slate-700 hover:bg-slate-100 hover:text-slate-950",
+  danger: "border-red-700 bg-red-700 text-white shadow-sm hover:bg-red-800"
 };
 
 const sizes: Record<ButtonSize, string> = {
@@ -34,7 +34,7 @@ export function Button({
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-md border font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:opacity-60",
+        "inline-flex items-center justify-center gap-2 rounded-md border font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 disabled:cursor-not-allowed disabled:opacity-60",
         variants[variant],
         sizes[size],
         className

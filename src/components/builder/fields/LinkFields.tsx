@@ -28,12 +28,12 @@ export function LinkFields({ links, fieldPrefix, label, onAdd, onDelete, onMove 
           Add link
         </Button>
       </div>
-      {links.length === 0 ? <p className="text-sm text-slate-500">No links added.</p> : null}
+      {links.length === 0 ? <p className="rounded-md border border-dashed border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-500">No links added.</p> : null}
       {links.map((link, index) => {
         const labelName = `${fieldPrefix}.${index}.label` as Path<ResumeData>;
         const urlName = `${fieldPrefix}.${index}.url` as Path<ResumeData>;
         return (
-          <div className="rounded-md border border-slate-200 p-3" key={link.id}>
+          <div className="rounded-md border border-slate-200 bg-slate-50 p-3" key={link.id}>
             <div className="grid gap-3 sm:grid-cols-2">
               <Input error={getFieldError(errors, labelName)} label="Link label" placeholder="Portfolio" {...register(labelName)} />
               <Input error={getFieldError(errors, urlName)} label="URL" placeholder="https://example.com" {...register(urlName)} />

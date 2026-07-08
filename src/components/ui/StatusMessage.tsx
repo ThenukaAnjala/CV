@@ -5,10 +5,10 @@ export function StatusMessage({ children, tone = "neutral" }: { children: string
     <span
       aria-live="polite"
       className={cn(
-        "inline-flex min-h-8 items-center rounded-md px-3 text-xs font-medium",
-        tone === "success" && "bg-emerald-50 text-emerald-800",
-        tone === "error" && "bg-red-50 text-red-800",
-        tone === "neutral" && "bg-slate-100 text-slate-700"
+        "inline-flex min-h-9 max-w-full items-center rounded-md border px-3 text-xs font-semibold shadow-sm",
+        tone === "success" && "border-emerald-200 bg-emerald-50 text-emerald-800",
+        tone === "error" && "border-red-200 bg-red-50 text-red-800",
+        tone === "neutral" && "border-sky-200 bg-sky-50 text-sky-900"
       )}
       role="status"
     >

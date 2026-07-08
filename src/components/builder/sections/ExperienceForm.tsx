@@ -27,8 +27,8 @@ export function ExperienceForm() {
             <Field name={`experience.${index}.location`} label="Location" placeholder="City, State" />
             <Field name={`experience.${index}.startDate`} label="Start date" placeholder="Jan 2025" />
             <Field name={`experience.${index}.endDate`} label="End date" placeholder="Present or Dec 2025" />
-            <label className="flex min-h-11 items-center gap-3 rounded-md border border-slate-300 px-3 text-sm font-medium text-slate-800">
-              <input className="h-4 w-4 rounded border-slate-300 text-blue-700 focus:ring-blue-700" type="checkbox" {...register(`experience.${index}.isCurrent` as Path<ResumeData>)} />
+            <label className="flex min-h-11 items-center gap-3 rounded-md border border-slate-300 bg-white px-3 text-sm font-medium text-slate-800 shadow-sm">
+              <input className="h-4 w-4 rounded border-slate-300 text-sky-700 focus:ring-sky-700" type="checkbox" {...register(`experience.${index}.isCurrent` as Path<ResumeData>)} />
               Current position
             </label>
           </div>

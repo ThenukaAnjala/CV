@@ -88,7 +88,7 @@ export function ResumeBuilder() {
 
   return (
     <FormProvider {...methods}>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-[#eef3f8]">
         <BuilderHeader
           data={resume}
           onExportJson={exportJson}
@@ -98,9 +98,9 @@ export function ResumeBuilder() {
           onStatus={publishStatus}
           status={status}
         />
-        <main className="mx-auto max-w-[1800px] space-y-4 p-4">
+        <main className="mx-auto max-w-[1800px] space-y-4 p-3 pb-6 sm:p-4">
           <MobileBuilderTabs mode={mobileMode} onModeChange={setMobileMode} />
-          <div className="grid gap-4 lg:grid-cols-[minmax(320px,42%)_minmax(0,58%)]">
+          <div className="grid gap-4 lg:grid-cols-[minmax(320px,44%)_minmax(0,56%)]">
             <div className={mobileMode === "edit" ? "block" : "hidden lg:block"}>
               <div className="grid gap-4 xl:grid-cols-[230px_minmax(0,1fr)]">
                 <BuilderNavigation
@@ -113,7 +113,7 @@ export function ResumeBuilder() {
               </div>
             </div>
             <div className={mobileMode === "preview" ? "block" : "hidden lg:block"}>
-              <div className="lg:sticky lg:top-32">
+              <div className="lg:sticky lg:top-36">
                 <ResumePreview data={resume} />
               </div>
             </div>

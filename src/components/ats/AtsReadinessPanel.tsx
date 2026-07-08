@@ -17,7 +17,10 @@ export function AtsReadinessPanel({ data }: { data: ResumeData }) {
             This is a general readiness estimate and not an official score from a specific applicant tracking system.
           </p>
         </div>
-        <p className="text-3xl font-bold text-blue-800">{analysis.score}/100</p>
+        <p className="text-3xl font-bold text-sky-800">{analysis.score}/100</p>
+      </div>
+      <div className="mt-4 h-2 rounded-full bg-slate-100" aria-label={`ATS readiness ${analysis.score} out of 100`}>
+        <div className="h-2 rounded-full bg-sky-700" style={{ width: `${analysis.score}%` }} />
       </div>
       <ul className="mt-4 space-y-3">
         {analysis.issues.length === 0 ? (
