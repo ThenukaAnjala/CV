@@ -9,7 +9,7 @@ function createPersonalInfo(overrides: Partial<PersonalInfo> = {}): PersonalInfo
     email: "candidate@example.com",
     phone: "+1 555 0100",
     location: "Example City",
-    website: "https://example.com",
+    website: "",
     links: [],
     ...overrides
   };

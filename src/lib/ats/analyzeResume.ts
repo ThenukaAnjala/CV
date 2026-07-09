@@ -52,8 +52,8 @@ function identityScore(resume: ResumeData, issues: AtsIssue[]): number {
   if (hasText(resume.personal.fullName)) score += 5;
   else addIssue(issues, { severity: "error", title: "Add your full name", description: "A full name helps recruiters and parsers identify the resume owner.", section: "Personal Information" });
 
-  if (hasText(resume.personal.email) || hasText(resume.personal.phone) || hasText(resume.personal.website) || resume.personal.links.length > 0) score += 5;
-  else addIssue(issues, { severity: "warning", title: "Add contact information", description: "Include at least one email, phone, website, or profile link.", section: "Personal Information" });
+  if (hasText(resume.personal.email) || hasText(resume.personal.phone) || resume.personal.links.length > 0) score += 5;
+  else addIssue(issues, { severity: "warning", title: "Add contact information", description: "Include at least one email, phone, or profile link.", section: "Personal Information" });
 
   return score;
 }
@@ -156,7 +156,6 @@ function dateAndLinkScore(resume: ResumeData, issues: AtsIssue[]): number {
   }
 
   const urls = [
-    resume.personal.website,
     ...resume.personal.links.map((link) => link.url),
     ...resume.projects.flatMap((project) => project.links.map((link) => link.url)),
     ...resume.certifications.map((certification) => certification.credentialUrl)

@@ -19,7 +19,6 @@ export function getPersonalContactItems(personal: PersonalInfo): ResumeDisplayIt
     textItem("email", personal.email),
     textItem("phone", personal.phone),
     textItem("location", personal.location),
-    urlItem("website", personal.website),
     ...getResumeLinkDisplayItems(personal.links)
   ].filter(isDisplayItem);
 }
@@ -42,13 +41,6 @@ export function getResumeLinkDisplayItem(link: ResumeLink): ResumeDisplayItem | 
 function textItem(id: string, value: string): ResumeDisplayItem | null {
   const label = trimText(value);
   return label ? { id, kind: "text", label } : null;
-}
-
-function urlItem(id: string, value: string): ResumeDisplayItem | null {
-  const href = trimText(value);
-  if (!href) return null;
-  if (isValidHttpUrl(href)) return { id, kind: "link", label: href, href };
-  return { id, kind: "text", label: href };
 }
 
 function isDisplayItem(item: ResumeDisplayItem | null): item is ResumeDisplayItem {

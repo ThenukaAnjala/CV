@@ -123,7 +123,7 @@ export function normalizeResumeData(input: Partial<ResumeData> | ResumeImportInp
       email: trimText(input.personal?.email),
       phone: trimText(input.personal?.phone),
       location: trimText(input.personal?.location),
-      website: trimText(input.personal?.website),
+      website: "",
       links: arrayOf<Partial<ResumeLink>>(input.personal?.links).map(normalizeLink).filter(isPresent)
     },
     summary: trimMultiline(input.summary),

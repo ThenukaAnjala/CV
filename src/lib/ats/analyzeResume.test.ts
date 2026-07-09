@@ -43,7 +43,7 @@ describe("analyzeResume", () => {
 
   it("detects invalid links", () => {
     const resume = createCompleteResume();
-    resume.personal.website = "notaurl";
+    resume.personal.links[0].url = "notaurl";
     expect(analyzeResume(resume).issues.some((issue) => issue.title === "Fix invalid URLs")).toBe(true);
   });
 

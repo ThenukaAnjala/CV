@@ -10,7 +10,7 @@ export function createCompleteResume(): ResumeData {
       email: "candidate@example.com",
       phone: "+1 555 0100",
       location: "Example City",
-      website: "https://example.com",
+      website: "",
       links: [{ id: "link-1", label: "Portfolio", url: "https://portfolio.example.com" }]
     },
     summary:

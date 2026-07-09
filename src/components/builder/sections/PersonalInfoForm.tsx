@@ -29,7 +29,6 @@ export function PersonalInfoForm() {
         <Input error={getFieldError(errors, "personal.email")} label="Email" placeholder="name@example.com" type="email" {...register("personal.email")} />
         <Input error={getFieldError(errors, "personal.phone")} label="Phone" placeholder="+1 555 0100" type="tel" {...register("personal.phone")} />
         <Input error={getFieldError(errors, "personal.location")} label="Location" placeholder="City, State" {...register("personal.location")} />
-        <Input error={getFieldError(errors, "personal.website")} label="Website" placeholder="https://example.com" type="url" {...register("personal.website")} />
       </div>
       <LinkFields
         fieldPrefix="personal.links"

@@ -11,7 +11,6 @@ export function getResumePlainText(data: ResumeData): string {
     resume.personal.email,
     resume.personal.phone,
     resume.personal.location,
-    resume.personal.website,
     ...resume.personal.links.flatMap((link) => [link.label, link.url])
   ];
 

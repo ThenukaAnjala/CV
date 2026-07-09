@@ -255,7 +255,7 @@ const personalSchema = z
     email: emailSchema,
     phone: phoneSchema,
     location: optionalText(120),
-    website: urlSchema,
+    website: optionalText(1000),
     links: z.array(linkSchema(requiredId))
   })
   .strict();
