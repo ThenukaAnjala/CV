@@ -6,15 +6,34 @@ import { SkillsRows } from "./SkillsRows";
 import type { ResumeData, SectionKey } from "@/types/resume";
 import { formatDateRange, getOrderedSections, hasText, joinNonEmpty } from "@/lib/resume/format";
 import { normalizeResumeData } from "@/lib/resume/normalizers";
+import { cn } from "@/lib/ui/cn";
 
-export function ResumePage({ data }: { data: ResumeData }) {
+export function ResumePage({
+  data,
+  displayMode = "document"
+}: {
+  data: ResumeData;
+  displayMode?: "document" | "mobile";
+}) {
   const resume = normalizeResumeData(data);
   const hasContent = hasText(resume.personal.fullName) || getOrderedSections(resume).some((section) => section.visible && sectionHasContent(resume, section.key));
 
   return (
-    <article className="min-h-[297mm] w-[210mm] bg-white px-[17mm] py-[15mm] text-slate-950">
+    <article
+      className={cn(
+        "bg-white text-slate-950",
+        displayMode === "mobile"
+          ? "min-h-[calc(100svh-14rem)] w-full px-4 py-5"
+          : "min-h-[297mm] w-[210mm] px-[17mm] py-[15mm]"
+      )}
+    >
       {!hasContent ? (
-        <div className="flex min-h-[250mm] items-center justify-center text-center text-sm text-slate-500">
+        <div
+          className={cn(
+            "flex items-center justify-center text-center text-sm text-slate-500",
+            displayMode === "mobile" ? "min-h-[60svh]" : "min-h-[250mm]"
+          )}
+        >
           Start with personal information to build your resume preview.
         </div>
       ) : (

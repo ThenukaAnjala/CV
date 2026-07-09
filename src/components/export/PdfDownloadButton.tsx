@@ -40,7 +40,7 @@ export function PdfDownloadButton({
   }
 
   return (
-    <Button disabled={busy} icon={<Download aria-hidden size={16} />} onClick={handleDownload} variant="primary">
+    <Button className="w-full sm:w-auto" disabled={busy} icon={<Download aria-hidden size={16} />} onClick={handleDownload} variant="primary">
       Download PDF
     </Button>
   );

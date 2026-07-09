@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 
 export type PreviewZoom = "0.75" | "0.9" | "1" | "fit";
+type PreviewDisplayMode = "document" | "mobile";
 
 export function PreviewControls({
+  displayMode,
   zoom,
   page,
   pageCount,
@@ -13,6 +15,7 @@ export function PreviewControls({
   onBoundaryChange,
   onPageChange
 }: {
+  displayMode: PreviewDisplayMode;
   zoom: PreviewZoom;
   page: number;
   pageCount: number;
@@ -21,29 +24,41 @@ export function PreviewControls({
   onBoundaryChange: (value: boolean) => void;
   onPageChange: (page: number) => void;
 }) {
+  const isMobilePreview = displayMode === "mobile";
+
   return (
-    <div className="flex flex-wrap items-end gap-3">
-      <div className="w-36">
-        <Select label="Preview zoom" onChange={(event) => onZoomChange(event.target.value as PreviewZoom)} value={zoom}>
-          <option value="fit">Fit width</option>
-          <option value="0.75">75%</option>
-          <option value="0.9">90%</option>
-          <option value="1">100%</option>
-        </Select>
+    <div className="grid gap-3 sm:flex sm:flex-wrap sm:items-end">
+      {isMobilePreview ? (
+        <span className="inline-flex min-h-9 items-center rounded-md border border-sky-200 bg-sky-50 px-3 text-sm font-semibold text-sky-900">
+          Mobile preview
+        </span>
+      ) : (
+        <div className="min-w-0 sm:w-36">
+          <Select label="Preview zoom" onChange={(event) => onZoomChange(event.target.value as PreviewZoom)} value={zoom}>
+            <option value="fit">Fit width</option>
+            <option value="0.75">75%</option>
+            <option value="0.9">90%</option>
+            <option value="1">100%</option>
+          </Select>
+        </div>
+      )}
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:flex sm:flex-wrap">
+        <Button className="w-full sm:w-auto" disabled={page <= 1} icon={<ChevronLeft aria-hidden size={16} />} onClick={() => onPageChange(page - 1)} size="sm" variant="secondary">
+          Previous
+        </Button>
+        <span className="min-h-9 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-center text-sm font-medium text-slate-700">
+          Page {page} of {pageCount}
+        </span>
+        <Button className="w-full sm:w-auto" disabled={page >= pageCount} icon={<ChevronRight aria-hidden size={16} />} onClick={() => onPageChange(page + 1)} size="sm" variant="secondary">
+          Next
+        </Button>
       </div>
-      <Button disabled={page <= 1} icon={<ChevronLeft aria-hidden size={16} />} onClick={() => onPageChange(page - 1)} size="sm" variant="secondary">
-        Previous
-      </Button>
-      <span className="min-h-9 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700">
-        Page {page} of {pageCount}
-      </span>
-      <Button disabled={page >= pageCount} icon={<ChevronRight aria-hidden size={16} />} onClick={() => onPageChange(page + 1)} size="sm" variant="secondary">
-        Next
-      </Button>
-      <label className="flex min-h-9 items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm font-medium text-slate-700">
-        <input checked={showBoundary} onChange={(event) => onBoundaryChange(event.target.checked)} type="checkbox" />
-        Page boundary
-      </label>
+      {isMobilePreview ? null : (
+        <label className="flex min-h-9 items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm font-medium text-slate-700">
+          <input checked={showBoundary} onChange={(event) => onBoundaryChange(event.target.checked)} type="checkbox" />
+          Page boundary
+        </label>
+      )}
     </div>
   );
 }

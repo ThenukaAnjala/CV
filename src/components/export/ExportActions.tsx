@@ -15,7 +15,7 @@ export function ExportActions({
   const [busy, setBusy] = useState(false);
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="contents sm:flex sm:flex-wrap sm:gap-2">
       <PdfDownloadButton busy={busy} data={data} onStatus={onStatus} setBusy={setBusy} />
       <DocxDownloadButton busy={busy} data={data} onStatus={onStatus} setBusy={setBusy} />
     </div>

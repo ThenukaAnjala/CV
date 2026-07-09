@@ -1,7 +1,40 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ResumeBuilder } from "./ResumeBuilder";
 import { APP_DEVELOPER } from "@/constants/app";
+
+const originalMatchMedia = window.matchMedia;
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  if (originalMatchMedia) {
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      value: originalMatchMedia,
+      writable: true
+    });
+    return;
+  }
+
+  Reflect.deleteProperty(window, "matchMedia");
+});
+
+function mockMobileViewport() {
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
+      addEventListener: vi.fn(),
+      addListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+      matches: true,
+      media: query,
+      onchange: null,
+      removeEventListener: vi.fn(),
+      removeListener: vi.fn()
+    })),
+    writable: true
+  });
+}
 
 describe("ResumeBuilder browser workflows", () => {
   it("shows the no-autosave privacy status", () => {
@@ -60,6 +93,34 @@ describe("ResumeBuilder browser workflows", () => {
 
     expect(startDate).toHaveAttribute("type", "month");
     expect(startDate).toHaveValue("2026-07");
+  });
+
+  it("opens mobile editor sections in a bottom drawer", async () => {
+    mockMobileViewport();
+    const user = userEvent.setup();
+    render(<ResumeBuilder />);
+
+    await user.click(await screen.findByRole("button", { name: "Open Summary" }));
+
+    const drawer = await screen.findByRole("dialog", { name: "Professional Summary" });
+    expect(within(drawer).getByLabelText("Summary")).toBeInTheDocument();
+
+    await user.click(within(drawer).getByRole("button", { name: "Close Summary editor" }));
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Professional Summary" })).not.toBeInTheDocument();
+    });
+  });
+
+  it("uses a mobile-sized preview surface on small screens", async () => {
+    mockMobileViewport();
+    const user = userEvent.setup();
+    render(<ResumeBuilder />);
+
+    await user.click(screen.getByRole("button", { name: "Preview" }));
+
+    expect(await screen.findByRole("region", { name: "Mobile resume preview" })).toBeInTheDocument();
+    expect(screen.getByText("Mobile preview")).toBeInTheDocument();
   });
 
   it("resets after confirmation", async () => {

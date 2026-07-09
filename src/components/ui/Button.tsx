@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/ui/cn";
 
@@ -22,15 +23,18 @@ const sizes: Record<ButtonSize, string> = {
   md: "min-h-11 px-4 py-2 text-sm"
 };
 
-export function Button({
-  className,
-  variant = "secondary",
-  size = "md",
-  icon,
-  children,
-  type = "button",
-  ...props
-}: ButtonProps) {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  {
+    className,
+    variant = "secondary",
+    size = "md",
+    icon,
+    children,
+    type = "button",
+    ...props
+  },
+  ref
+) {
   return (
     <button
       className={cn(
@@ -39,6 +43,7 @@ export function Button({
         sizes[size],
         className
       )}
+      ref={ref}
       type={type}
       {...props}
     >
@@ -46,4 +51,4 @@ export function Button({
       <span className="truncate">{children}</span>
     </button>
   );
-}
+});
