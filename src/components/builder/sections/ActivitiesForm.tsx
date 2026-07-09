@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import { useFormContext, type Path } from "react-hook-form";
+import { MonthYearField } from "@/components/builder/fields/MonthYearField";
 import { RepeatedItemControls } from "@/components/builder/RepeatedItemControls";
 import { SectionCard } from "@/components/builder/SectionCard";
 import { BulletFields } from "@/components/builder/fields/BulletFields";
@@ -24,7 +25,7 @@ export function ActivitiesForm() {
           <div className="grid gap-4 sm:grid-cols-2">
             {renderField(`activities.${index}.role`, "Role", "Role")}
             {renderField(`activities.${index}.organization`, "Organization", "Organization Name")}
-            {renderField(`activities.${index}.year`, "Year", "2025")}
+            <MonthYearField label="Date" name={`activities.${index}.year`} />
           </div>
           <BulletFields bullets={item.bullets} fieldPrefix={`activities.${index}.bullets`} label="Activity bullets" onAdd={() => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, bullets: [...entry.bullets, createBlankBullet()] } : entry))} onDelete={(bulletIndex) => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, bullets: entry.bullets.filter((_, i) => i !== bulletIndex) } : entry))} onMove={(bulletIndex, direction) => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, bullets: moveItem(entry.bullets, bulletIndex, direction) } : entry))} />
         </SectionCard>

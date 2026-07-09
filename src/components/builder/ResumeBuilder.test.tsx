@@ -28,6 +28,14 @@ describe("ResumeBuilder browser workflows", () => {
     expect(screen.getByLabelText("Full name")).toHaveValue("Example Candidate");
   });
 
+  it("shows validation messages for invalid personal information", async () => {
+    render(<ResumeBuilder />);
+
+    fireEvent.change(screen.getByLabelText("Email"), { target: { value: "not-an-email" } });
+
+    expect(await screen.findByText("Enter a valid email address.")).toBeInTheDocument();
+  });
+
   it("keeps repeated-section field focus while typing", async () => {
     const user = userEvent.setup();
     render(<ResumeBuilder />);
@@ -38,6 +46,20 @@ describe("ResumeBuilder browser workflows", () => {
 
     expect(screen.getByLabelText("Institution")).toHaveValue("MIT");
     expect(screen.getByLabelText("Institution")).toHaveFocus();
+  });
+
+  it("uses month and year pickers for resume dates", async () => {
+    const user = userEvent.setup();
+    render(<ResumeBuilder />);
+
+    await user.click(screen.getByRole("button", { name: "Education" }));
+    await user.click(screen.getByRole("button", { name: "Add education" }));
+
+    const startDate = screen.getByLabelText("Start date");
+    fireEvent.change(startDate, { target: { value: "2026-07" } });
+
+    expect(startDate).toHaveAttribute("type", "month");
+    expect(startDate).toHaveValue("2026-07");
   });
 
   it("resets after confirmation", async () => {

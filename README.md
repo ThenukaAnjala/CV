@@ -1,4 +1,4 @@
-# ATS Resume Builder
+# CV Flow
 
 Create, check, and export an ATS-friendly resume locally in your browser.
 

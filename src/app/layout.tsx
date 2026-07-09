@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { APP_DEVELOPER } from "@/constants/app";
+import { APP_DESCRIPTION, APP_DEVELOPER, APP_NAME } from "@/constants/app";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ATS Resume Builder",
-  description: "Create, check, and export an ATS-friendly resume locally in your browser.",
+  title: APP_NAME,
+  description: APP_DESCRIPTION,
   creator: APP_DEVELOPER.name
 };
 

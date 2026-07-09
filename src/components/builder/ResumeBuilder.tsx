@@ -31,7 +31,8 @@ type ConfirmAction = "new" | "reset" | "import" | null;
 export function ResumeBuilder() {
   const methods = useForm<ResumeData>({
     defaultValues: createBlankResumeData(),
-    mode: "onBlur",
+    mode: "onChange",
+    reValidateMode: "onChange",
     resolver: zodResolver(resumeDataSchema)
   });
   const resume = useWatch({ control: methods.control }) as ResumeData;
@@ -48,7 +49,13 @@ export function ResumeBuilder() {
     setStatus({ message, tone });
   }
 
-  function exportJson() {
+  async function exportJson() {
+    const isValid = await methods.trigger();
+    if (!isValid) {
+      publishStatus("Fix validation errors before exporting JSON.", "error");
+      return;
+    }
+
     downloadTextFile(serializeResumeJson(resume), getJsonExportFilename(resume));
     publishStatus("JSON file prepared by your browser. The app did not store a copy.", "success");
   }

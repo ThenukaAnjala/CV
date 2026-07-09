@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import { useFormContext, type Path } from "react-hook-form";
+import { MonthYearField } from "@/components/builder/fields/MonthYearField";
 import { RepeatedItemControls } from "@/components/builder/RepeatedItemControls";
 import { SectionCard } from "@/components/builder/SectionCard";
 import { Button } from "@/components/ui/Button";
@@ -23,16 +24,16 @@ export function CertificationsForm() {
           <div className="grid gap-4 sm:grid-cols-2">
             {renderField(`certifications.${index}.name`, "Certification name", "Certification Name")}
             {renderField(`certifications.${index}.issuer`, "Issuer", "Issuer Name")}
-            {renderField(`certifications.${index}.year`, "Year", "2025")}
-            {renderField(`certifications.${index}.credentialUrl`, "Credential URL", "https://example.com")}
+            <MonthYearField label="Issue date" name={`certifications.${index}.year`} />
+            {renderField(`certifications.${index}.credentialUrl`, "Credential URL", "https://example.com", "url")}
           </div>
         </SectionCard>
       ))}
     </SectionCard>
   );
 
-  function renderField(name: string, label: string, placeholder: string) {
+  function renderField(name: string, label: string, placeholder: string, type = "text") {
     const path = name as Path<ResumeData>;
-    return <Input error={getFieldError(errors, path)} label={label} placeholder={placeholder} {...register(path)} />;
+    return <Input error={getFieldError(errors, path)} label={label} placeholder={placeholder} type={type} {...register(path)} />;
   }
 }

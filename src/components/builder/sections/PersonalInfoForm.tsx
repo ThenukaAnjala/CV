@@ -26,10 +26,10 @@ export function PersonalInfoForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <Input error={getFieldError(errors, "personal.fullName")} label="Full name" placeholder="YOUR NAME" {...register("personal.fullName")} />
         <Input error={getFieldError(errors, "personal.headline")} label="Target headline" placeholder="TARGET JOB TITLE" {...register("personal.headline")} />
-        <Input error={getFieldError(errors, "personal.email")} label="Email" placeholder="name@example.com" {...register("personal.email")} />
-        <Input error={getFieldError(errors, "personal.phone")} label="Phone" placeholder="+1 555 0100" {...register("personal.phone")} />
+        <Input error={getFieldError(errors, "personal.email")} label="Email" placeholder="name@example.com" type="email" {...register("personal.email")} />
+        <Input error={getFieldError(errors, "personal.phone")} label="Phone" placeholder="+1 555 0100" type="tel" {...register("personal.phone")} />
         <Input error={getFieldError(errors, "personal.location")} label="Location" placeholder="City, State" {...register("personal.location")} />
-        <Input error={getFieldError(errors, "personal.website")} label="Website" placeholder="https://example.com" {...register("personal.website")} />
+        <Input error={getFieldError(errors, "personal.website")} label="Website" placeholder="https://example.com" type="url" {...register("personal.website")} />
       </div>
       <LinkFields
         fieldPrefix="personal.links"

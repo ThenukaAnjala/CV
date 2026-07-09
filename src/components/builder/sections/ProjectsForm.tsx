@@ -4,6 +4,7 @@ import { RepeatedItemControls } from "@/components/builder/RepeatedItemControls"
 import { SectionCard } from "@/components/builder/SectionCard";
 import { BulletFields } from "@/components/builder/fields/BulletFields";
 import { LinkFields } from "@/components/builder/fields/LinkFields";
+import { MonthYearField } from "@/components/builder/fields/MonthYearField";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/Input";
@@ -26,8 +27,8 @@ export function ProjectsForm() {
           <div className="grid gap-4 sm:grid-cols-2">
             {renderField(`projects.${index}.name`, "Project name", "Project Name")}
             {renderField(`projects.${index}.role`, "Role or context", "Role or team context")}
-            {renderField(`projects.${index}.startDate`, "Start date", "Jan 2025")}
-            {renderField(`projects.${index}.endDate`, "End date", "Mar 2025")}
+            <MonthYearField label="Start date" name={`projects.${index}.startDate`} />
+            <MonthYearField label="End date" name={`projects.${index}.endDate`} />
           </div>
           <Textarea error={getFieldError(errors, `projects.${index}.description` as Path<ResumeData>)} label="Description" placeholder="Briefly describe the project purpose, scope, and outcome." rows={3} {...register(`projects.${index}.description` as Path<ResumeData>)} />
           <LinkFields links={item.links} fieldPrefix={`projects.${index}.links`} label="Project links" onAdd={() => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, links: [...entry.links, createBlankLink()] } : entry))} onDelete={(linkIndex) => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, links: entry.links.filter((_, i) => i !== linkIndex) } : entry))} onMove={(linkIndex, direction) => setItems(items.map((entry, itemIndex) => itemIndex === index ? { ...entry, links: moveItem(entry.links, linkIndex, direction) } : entry))} />

@@ -3,6 +3,7 @@ import { useFormContext, type Path } from "react-hook-form";
 import { RepeatedItemControls } from "@/components/builder/RepeatedItemControls";
 import { SectionCard } from "@/components/builder/SectionCard";
 import { BulletFields } from "@/components/builder/fields/BulletFields";
+import { MonthYearField } from "@/components/builder/fields/MonthYearField";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Input } from "@/components/ui/Input";
@@ -33,8 +34,8 @@ export function EducationForm() {
             {renderField(`education.${index}.qualification`, "Qualification", "Degree or qualification")}
             {renderField(`education.${index}.institution`, "Institution", "Institution Name")}
             {renderField(`education.${index}.location`, "Location", "City, State")}
-            {renderField(`education.${index}.startDate`, "Start date", "Jan 2025")}
-            {renderField(`education.${index}.endDate`, "End date", "Dec 2025")}
+            <MonthYearField label="Start date" name={`education.${index}.startDate`} />
+            <MonthYearField label="End date" name={`education.${index}.endDate`} />
           </div>
           <BulletFields
             bullets={item.details}

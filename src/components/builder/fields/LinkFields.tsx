@@ -36,7 +36,7 @@ export function LinkFields({ links, fieldPrefix, label, onAdd, onDelete, onMove 
           <div className="rounded-md border border-slate-200 bg-slate-50 p-3" key={link.id}>
             <div className="grid gap-3 sm:grid-cols-2">
               <Input error={getFieldError(errors, labelName)} label="Link label" placeholder="Portfolio" {...register(labelName)} />
-              <Input error={getFieldError(errors, urlName)} label="URL" placeholder="https://example.com" {...register(urlName)} />
+              <Input error={getFieldError(errors, urlName)} label="URL" placeholder="https://example.com" type="url" {...register(urlName)} />
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button disabled={index === 0} icon={<MoveUp aria-hidden size={16} />} onClick={() => onMove(index, -1)} size="sm" variant="ghost">
