@@ -31,7 +31,9 @@ export function EducationForm() {
           title={`Education ${index + 1}`}
         >
           <div className="grid gap-4 sm:grid-cols-2">
-            {renderField(`education.${index}.qualification`, "Qualification", "Degree or qualification")}
+            <div className="sm:col-span-2">
+              {renderField(`education.${index}.qualification`, "Qualification", "Degree or qualification")}
+            </div>
             {renderField(`education.${index}.institution`, "Institution", "Institution Name")}
             {renderField(`education.${index}.location`, "Location", "City, State")}
             <MonthYearField label="Start date" name={`education.${index}.startDate`} />

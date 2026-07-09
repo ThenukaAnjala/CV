@@ -22,7 +22,9 @@ const styles = StyleSheet.create({
   section: { marginTop: 9 },
   sectionTitle: { fontSize: 10, fontWeight: 700, textTransform: "uppercase", borderBottomWidth: 1, borderBottomColor: "#111827", paddingBottom: 2, marginBottom: 5 },
   entryHeader: { flexDirection: "row", justifyContent: "space-between", gap: 12 },
-  entryLeft: { flex: 1, fontWeight: 700 },
+  entryLeft: { flex: 1 },
+  entryPrimary: { fontWeight: 700 },
+  entrySubline: { lineHeight: 1.2, marginTop: 1 },
   date: { minWidth: 88, textAlign: "right" },
   paragraph: { lineHeight: 1.25 },
   bulletRow: { flexDirection: "row", gap: 5, marginTop: 2, paddingLeft: 10 },
@@ -91,10 +93,13 @@ function Section({ title, children }: { title: string; children: ReactElement | 
   );
 }
 
-function EntryHeader({ left, date }: { left: string; date?: string }) {
+function EntryHeader({ left, subline, date }: { left: string; subline?: string; date?: string }) {
   return (
     <View style={styles.entryHeader}>
-      <Text style={styles.entryLeft}>{left}</Text>
+      <View style={styles.entryLeft}>
+        {left ? <Text style={styles.entryPrimary}>{left}</Text> : null}
+        {subline ? <Text style={styles.entrySubline}>{subline}</Text> : null}
+      </View>
       {date ? <Text style={styles.date}>{date}</Text> : null}
     </View>
   );
@@ -114,7 +119,11 @@ function renderSection(data: ResumeData, key: SectionKey): ReactElement | ReactE
   if (key === "education") {
     return data.education.filter((item) => !item.hidden).map((item) => (
       <View key={item.id} wrap={false}>
-        <EntryHeader date={formatDateRange(item.startDate, item.endDate)} left={joinNonEmpty([item.qualification, item.institution, item.location], ", ")} />
+        <EntryHeader
+          date={formatDateRange(item.startDate, item.endDate)}
+          left={item.qualification}
+          subline={joinNonEmpty([item.institution, item.location], ", ")}
+        />
         <Bullets bullets={item.details} />
       </View>
     ));

@@ -94,11 +94,21 @@ function sectionHeading(title: string): Paragraph {
   });
 }
 
-function entryHeader(left: string, date?: string): Paragraph {
+function entryHeader(left: string, date?: string, spacingAfter?: number): Paragraph {
   return new Paragraph({
+    spacing: spacingAfter === undefined ? undefined : { after: spacingAfter },
     tabStops: [{ type: TabStopType.RIGHT, position: CONTENT_RIGHT_TAB }],
     children: [new TextRun({ text: left, bold: true }), ...(date ? [new TextRun({ text: `\t${date}` })] : [])]
   });
+}
+
+function educationHeader(qualification: string, institution: string, location: string, date?: string): Paragraph[] {
+  const schoolLine = joinNonEmpty([institution, location], ", ");
+
+  return [
+    entryHeader(qualification, date, schoolLine ? 0 : undefined),
+    ...(schoolLine ? [new Paragraph({ children: [new TextRun(schoolLine)] })] : [])
+  ];
 }
 
 function bulletParagraphs(bullets: ResumeBullet[]): Paragraph[] {
@@ -141,7 +151,7 @@ function renderSection(data: ResumeData, key: SectionKey): Paragraph[] {
   if (key === "summary") return [new Paragraph({ children: [new TextRun(data.summary)] })];
   if (key === "education") {
     return data.education.filter((item) => !item.hidden).flatMap((item) => [
-      entryHeader(joinNonEmpty([item.qualification, item.institution, item.location], ", "), formatDateRange(item.startDate, item.endDate)),
+      ...educationHeader(item.qualification, item.institution, item.location, formatDateRange(item.startDate, item.endDate)),
       ...bulletParagraphs(item.details)
     ]);
   }
