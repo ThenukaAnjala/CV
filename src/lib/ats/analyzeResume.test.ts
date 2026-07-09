@@ -47,6 +47,12 @@ describe("analyzeResume", () => {
     expect(analyzeResume(resume).issues.some((issue) => issue.title === "Fix invalid URLs")).toBe(true);
   });
 
+  it("detects invalid certification links", () => {
+    const resume = createCompleteResume();
+    resume.certifications[0].links[0].url = "notaurl";
+    expect(analyzeResume(resume).issues.some((issue) => issue.title === "Fix invalid URLs")).toBe(true);
+  });
+
   it("detects duplicate keywords across skill groups", () => {
     const resume = createCompleteResume();
     resume.skillGroups.push({ id: "skill-3", label: "Frontend", values: ["React"], hidden: false });

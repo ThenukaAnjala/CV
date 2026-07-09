@@ -48,7 +48,7 @@ export function cloneSkillGroup(group: SkillGroup): SkillGroup {
 }
 
 export function cloneCertification(entry: CertificationEntry): CertificationEntry {
-  return { ...entry, id: createId("certification") };
+  return { ...entry, id: createId("certification"), links: entry.links.map(cloneLink) };
 }
 
 export function cloneActivity(entry: ActivityEntry): ActivityEntry {

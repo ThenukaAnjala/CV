@@ -30,12 +30,11 @@ export function getResumeLinkDisplayItems(links: readonly ResumeLink[]): ResumeD
 export function getResumeLinkDisplayItem(link: ResumeLink): ResumeDisplayItem | null {
   const label = trimText(link.label);
   const href = trimText(link.url);
-  const displayLabel = label || href;
 
-  if (!displayLabel) return null;
-  if (href && isValidHttpUrl(href)) return { id: link.id, kind: "link", label: displayLabel, href };
+  if (!label) return null;
+  if (href && isValidHttpUrl(href)) return { id: link.id, kind: "link", label, href };
 
-  return { id: link.id, kind: "text", label: displayLabel };
+  return { id: link.id, kind: "text", label };
 }
 
 function textItem(id: string, value: string): ResumeDisplayItem | null {

@@ -60,7 +60,7 @@ function sectionText(data: ResumeData, key: string): string[] {
   }
   if (key === "certifications") {
     return data.certifications.flatMap((item) =>
-      item.hidden ? [] : [item.name, item.issuer, item.year, item.credentialUrl]
+      item.hidden ? [] : [item.name, item.issuer, item.year, ...item.links.flatMap((link) => [link.label, link.url])]
     );
   }
   if (key === "activities") {

@@ -71,7 +71,7 @@ export function createBlankCertification(): CertificationEntry {
     name: "",
     issuer: "",
     year: "",
-    credentialUrl: "",
+    links: [],
     hidden: false
   };
 }

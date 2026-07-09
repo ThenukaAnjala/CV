@@ -49,4 +49,19 @@ describe("ResumeHeader", () => {
     expect(screen.queryByRole("link", { name: "LinkedIn" })).not.toBeInTheDocument();
     expect(screen.queryByText("not-a-url")).not.toBeInTheDocument();
   });
+
+  it("does not show draft link URLs without labels", () => {
+    render(
+      <ResumeHeader
+        personal={createPersonalInfo({
+          email: "",
+          phone: "",
+          location: "",
+          links: [{ id: "link-1", label: "", url: "https://network.example.com/profile" }]
+        })}
+      />
+    );
+
+    expect(screen.queryByText(/network\.example\.com/i)).not.toBeInTheDocument();
+  });
 });

@@ -29,4 +29,13 @@ describe("ResumePage", () => {
     expect(row).toHaveClass("justify-between");
     expect(values).toHaveClass("text-right");
   });
+
+  it("renders certification links by label without showing the URL", () => {
+    render(<ResumePage data={createCompleteResume()} />);
+
+    const link = screen.getByRole("link", { name: "Credential" });
+
+    expect(link).toHaveAttribute("href", "https://certificate.example.com");
+    expect(screen.queryByText("https://certificate.example.com")).not.toBeInTheDocument();
+  });
 });

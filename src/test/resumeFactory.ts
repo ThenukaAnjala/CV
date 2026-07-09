@@ -66,7 +66,7 @@ export function createCompleteResume(): ResumeData {
         name: "Example Web Certificate",
         issuer: "Example Issuer",
         year: "2025",
-        credentialUrl: "https://certificate.example.com",
+        links: [{ id: "certification-link-1", label: "Credential", url: "https://certificate.example.com" }],
         hidden: false
       }
     ],

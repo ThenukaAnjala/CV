@@ -178,12 +178,31 @@ function renderSection(data: ResumeData, key: SectionKey): ReactElement | ReactE
     ));
   }
   if (key === "certifications") {
-    return data.certifications.filter((item) => !item.hidden).map((item) => (
-      <View key={item.id}>
-        <EntryHeader date={item.year} left={joinNonEmpty([item.name, item.issuer], ", ")} />
-        {item.credentialUrl ? <Link src={item.credentialUrl} style={styles.link}>{item.credentialUrl}</Link> : null}
-      </View>
-    ));
+    return data.certifications.filter((item) => !item.hidden).map((item) => {
+      const links = getResumeLinkDisplayItems(item.links);
+
+      return (
+        <View key={item.id}>
+          <EntryHeader date={item.year} left={joinNonEmpty([item.name, item.issuer], ", ")} />
+          {links.length > 0 ? (
+            <Text style={styles.projectLinks}>
+              {links.map((link, index) => (
+                <Text key={link.id}>
+                  {index > 0 ? " | " : ""}
+                  {link.kind === "link" ? (
+                    <Link src={link.href} style={styles.link}>
+                      {link.label}
+                    </Link>
+                  ) : (
+                    link.label
+                  )}
+                </Text>
+              ))}
+            </Text>
+          ) : null}
+        </View>
+      );
+    });
   }
   return data.activities.filter((item) => !item.hidden).map((item) => (
     <View key={item.id} wrap={false}>

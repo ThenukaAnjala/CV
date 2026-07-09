@@ -110,9 +110,31 @@ function renderSection(resume: ResumeData, key: SectionKey) {
   }
   if (key === "skills") return <SkillsRows groups={resume.skillGroups.filter((group) => !group.hidden)} />;
   if (key === "certifications") {
-    return resume.certifications.filter((item) => !item.hidden).map((item) => (
-      <EntryHeader date={item.year} key={item.id} primary={joinNonEmpty([item.name, item.issuer], ", ")} secondary={item.credentialUrl} />
-    ));
+    return resume.certifications.filter((item) => !item.hidden).map((item) => {
+      const links = getResumeLinkDisplayItems(item.links);
+
+      return (
+        <div key={item.id}>
+          <EntryHeader date={item.year} primary={item.name} secondary={item.issuer} />
+          {links.length > 0 ? (
+            <p className="mt-1 break-words text-[9.5pt]">
+              {links.map((link, index) => (
+                <span key={link.id}>
+                  {index > 0 ? " | " : null}
+                  {link.kind === "link" ? (
+                    <a className="text-blue-700 underline" href={link.href} rel="noreferrer" target="_blank">
+                      {link.label}
+                    </a>
+                  ) : (
+                    link.label
+                  )}
+                </span>
+              ))}
+            </p>
+          ) : null}
+        </div>
+      );
+    });
   }
   return resume.activities.filter((item) => !item.hidden).map((item) => (
     <div key={item.id}>

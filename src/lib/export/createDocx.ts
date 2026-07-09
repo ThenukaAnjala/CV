@@ -12,7 +12,7 @@ import {
 } from "docx";
 import type { ISectionOptions, ParagraphChild } from "docx";
 import type { ResumeBullet, ResumeData, SectionKey } from "@/types/resume";
-import { getPersonalContactItems, getResumeLinkDisplayItem } from "@/lib/resume/displayLinks";
+import { getPersonalContactItems, getResumeLinkDisplayItem, getResumeLinkDisplayItems } from "@/lib/resume/displayLinks";
 import type { ResumeDisplayItem } from "@/lib/resume/displayLinks";
 import { formatDateRange, getOrderedSections, hasText, joinNonEmpty } from "@/lib/resume/format";
 import { normalizeResumeData } from "@/lib/resume/normalizers";
@@ -180,7 +180,9 @@ function renderSection(data: ResumeData, key: SectionKey): Paragraph[] {
   if (key === "certifications") {
     return data.certifications.filter((item) => !item.hidden).flatMap((item) => [
       entryHeader(joinNonEmpty([item.name, item.issuer], ", "), item.year),
-      ...(item.credentialUrl ? [linkParagraph("", item.credentialUrl)] : [])
+      ...getResumeLinkDisplayItems(item.links).map((link) =>
+        link.kind === "link" ? new Paragraph({ children: [inlineLinkChild(link)] }) : new Paragraph({ children: [new TextRun(link.label)] })
+      )
     ]);
   }
   return data.activities.filter((item) => !item.hidden).flatMap((item) => [

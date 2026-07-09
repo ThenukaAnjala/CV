@@ -75,7 +75,7 @@ export type CertificationEntry = {
   name: string;
   issuer: string;
   year: string;
-  credentialUrl: string;
+  links: ResumeLink[];
   hidden: boolean;
 };
 

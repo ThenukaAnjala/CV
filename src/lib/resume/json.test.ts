@@ -29,6 +29,30 @@ describe("resume JSON import", () => {
     if (result.ok) expect(result.data.summary).toBe("<script>alert('x')</script>");
   });
 
+  it("migrates legacy certification credential URLs into labeled links", () => {
+    const result = parseResumeJson(
+      JSON.stringify({
+        schemaVersion: 1,
+        certifications: [
+          {
+            name: "Example Certificate",
+            issuer: "Example Issuer",
+            year: "Jul 2026",
+            credentialUrl: "https://certificate.example.com",
+            hidden: false
+          }
+        ]
+      })
+    );
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect(result.data.certifications[0].links).toEqual([
+        expect.objectContaining({ label: "Credential", url: "https://certificate.example.com" })
+      ]);
+    }
+  });
+
   it("rejects empty files", () => {
     expect(parseResumeJson(" ").ok).toBe(false);
   });

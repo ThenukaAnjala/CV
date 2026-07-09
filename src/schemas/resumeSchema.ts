@@ -209,12 +209,32 @@ function certificationSchema<T extends z.ZodType>(idSchema: T) {
       name: optionalText(180),
       issuer: optionalText(180),
       year: monthYearSchema,
-      credentialUrl: urlSchema,
+      links: z.array(linkSchema(idSchema)),
       hidden: z.boolean()
     })
     .strict()
     .superRefine((entry, context) => {
-      const started = [entry.name, entry.issuer, entry.year, entry.credentialUrl].some(hasValue);
+      const started = hasLinkContent(entry.links) || [entry.name, entry.issuer, entry.year].some(hasValue);
+
+      requireWhenStarted(context, started, ["name"], entry.name, "Add a certification name.");
+      requireWhenStarted(context, started, ["issuer"], entry.issuer, "Add the certification issuer.");
+    });
+}
+
+function certificationImportSchema<T extends z.ZodType>(idSchema: T) {
+  return z
+    .object({
+      id: idSchema,
+      name: optionalText(180),
+      issuer: optionalText(180),
+      year: monthYearSchema,
+      links: z.array(linkSchema(idSchema)).optional().default([]),
+      credentialUrl: urlSchema.optional().default(""),
+      hidden: z.boolean()
+    })
+    .strict()
+    .superRefine((entry, context) => {
+      const started = hasLinkContent(entry.links) || [entry.name, entry.issuer, entry.year, entry.credentialUrl].some(hasValue);
 
       requireWhenStarted(context, started, ["name"], entry.name, "Add a certification name.");
       requireWhenStarted(context, started, ["issuer"], entry.issuer, "Add the certification issuer.");
@@ -301,7 +321,7 @@ export const resumeImportSchema = z
     experience: z.array(experienceSchema(optionalId)).optional(),
     projects: z.array(projectSchema(optionalId)).optional(),
     skillGroups: z.array(skillGroupSchema(optionalId)).optional(),
-    certifications: z.array(certificationSchema(optionalId)).optional(),
+    certifications: z.array(certificationImportSchema(optionalId)).optional(),
     activities: z.array(activitySchema(optionalId)).optional(),
     sectionSettings: z.array(sectionSettingSchema).optional(),
     updatedAt: optionalText(80).optional()

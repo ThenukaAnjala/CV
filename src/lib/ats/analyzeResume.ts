@@ -158,7 +158,7 @@ function dateAndLinkScore(resume: ResumeData, issues: AtsIssue[]): number {
   const urls = [
     ...resume.personal.links.map((link) => link.url),
     ...resume.projects.flatMap((project) => project.links.map((link) => link.url)),
-    ...resume.certifications.map((certification) => certification.credentialUrl)
+    ...resume.certifications.flatMap((certification) => certification.links.map((link) => link.url))
   ];
 
   if (urls.some((url) => !isValidHttpUrl(url))) {

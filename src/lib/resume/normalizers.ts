@@ -15,6 +15,8 @@ import type { ResumeImportInput } from "@/schemas/resumeSchema";
 import { createId } from "./id";
 import { trimMultiline, trimText } from "./format";
 
+type CertificationImportLike = Partial<CertificationEntry> & { credentialUrl?: string };
+
 function isPresent<T>(value: T | null): value is T {
   return value !== null;
 }
@@ -90,15 +92,25 @@ function normalizeSkillGroup(group: Partial<SkillGroup> | undefined): SkillGroup
   };
 }
 
-function normalizeCertification(entry: Partial<CertificationEntry> | undefined): CertificationEntry {
+function normalizeCertification(entry: CertificationImportLike | undefined): CertificationEntry {
+  const links = arrayOf<Partial<ResumeLink>>(entry?.links).map(normalizeLink).filter(isPresent);
+  const legacyCredentialLink = normalizeLegacyCredentialLink(entry);
+
   return {
     id: ensureId(entry?.id, "certification"),
     name: trimText(entry?.name),
     issuer: trimText(entry?.issuer),
     year: trimText(entry?.year),
-    credentialUrl: trimText(entry?.credentialUrl),
+    links: legacyCredentialLink && !links.some((link) => link.url === legacyCredentialLink.url) ? [...links, legacyCredentialLink] : links,
     hidden: entry?.hidden ?? false
   };
+}
+
+function normalizeLegacyCredentialLink(entry: CertificationImportLike | undefined): ResumeLink | null {
+  const credentialUrl = trimText(entry?.credentialUrl);
+  if (!credentialUrl) return null;
+
+  return normalizeLink({ id: createId("link"), label: "Credential", url: credentialUrl });
 }
 
 function normalizeActivity(entry: Partial<ActivityEntry> | undefined): ActivityEntry {
@@ -131,7 +143,7 @@ export function normalizeResumeData(input: Partial<ResumeData> | ResumeImportInp
     experience: arrayOf<Partial<ExperienceEntry>>(input.experience).map(normalizeExperience),
     projects: arrayOf<Partial<ProjectEntry>>(input.projects).map(normalizeProject),
     skillGroups: arrayOf<Partial<SkillGroup>>(input.skillGroups).map(normalizeSkillGroup),
-    certifications: arrayOf<Partial<CertificationEntry>>(input.certifications).map(normalizeCertification),
+    certifications: arrayOf<CertificationImportLike>(input.certifications).map(normalizeCertification),
     activities: arrayOf<Partial<ActivityEntry>>(input.activities).map(normalizeActivity),
     sectionSettings,
     updatedAt: new Date().toISOString()
