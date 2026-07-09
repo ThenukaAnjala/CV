@@ -171,7 +171,10 @@ function renderSection(data: ResumeData, key: SectionKey): Paragraph[] {
   }
   if (key === "skills") {
     return data.skillGroups.filter((group) => !group.hidden).map((group) =>
-      new Paragraph({ children: [new TextRun({ text: `${group.label}: `, bold: true }), new TextRun(joinNonEmpty(group.values, ", "))] })
+      new Paragraph({
+        tabStops: [{ type: TabStopType.RIGHT, position: CONTENT_RIGHT_TAB }],
+        children: [new TextRun({ text: `${group.label}:`, bold: true }), new TextRun(`\t${joinNonEmpty(group.values, ", ")}`)]
+      })
     );
   }
   if (key === "certifications") {

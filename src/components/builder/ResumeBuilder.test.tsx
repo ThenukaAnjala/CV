@@ -75,9 +75,9 @@ describe("ResumeBuilder browser workflows", () => {
 
     await user.click(screen.getByRole("button", { name: "Education" }));
     await user.click(screen.getByRole("button", { name: "Add education" }));
-    await user.type(screen.getByLabelText("Institution"), "MIT");
+    await user.type(screen.getByLabelText("Institution"), "Example Institute");
 
-    expect(screen.getByLabelText("Institution")).toHaveValue("MIT");
+    expect(screen.getByLabelText("Institution")).toHaveValue("Example Institute");
     expect(screen.getByLabelText("Institution")).toHaveFocus();
   });
 

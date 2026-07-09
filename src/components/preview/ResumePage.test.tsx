@@ -16,4 +16,17 @@ describe("ResumePage", () => {
     expect(screen.getByText("Frontend Engineer")).toBeInTheDocument();
     expect(screen.getByText("Example Software Company, Example City")).toBeInTheDocument();
   });
+
+  it("renders skill labels on the left and values on the right", () => {
+    render(<ResumePage data={createCompleteResume()} />);
+
+    const label = screen.getByText("Core Skills:");
+    const values = screen.getByText("TypeScript, React, Next.js");
+    const row = label.parentElement;
+
+    if (!row) throw new Error("Missing skills row");
+
+    expect(row).toHaveClass("justify-between");
+    expect(values).toHaveClass("text-right");
+  });
 });

@@ -30,9 +30,9 @@ const styles = StyleSheet.create({
   bulletRow: { flexDirection: "row", gap: 5, marginTop: 2, paddingLeft: 10 },
   bulletText: { flex: 1, lineHeight: 1.2 },
   projectLinks: { marginTop: 2 },
-  skillRow: { flexDirection: "row", gap: 10, marginBottom: 3 },
-  skillLabel: { width: 96, fontWeight: 700 },
-  skillValues: { flex: 1 },
+  skillRow: { flexDirection: "row", justifyContent: "space-between", gap: 12, marginBottom: 3 },
+  skillLabel: { maxWidth: 190, fontWeight: 700 },
+  skillValues: { flex: 1, textAlign: "right" },
   link: { color: "#1d4ed8", textDecoration: "underline" }
 });
 
