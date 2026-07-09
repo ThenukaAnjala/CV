@@ -3,7 +3,6 @@
 import { X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEffect, useRef } from "react";
-import { Button } from "./Button";
 
 type BottomDrawerProps = {
   open: boolean;
@@ -99,7 +98,7 @@ export function BottomDrawer({
         ref={drawerRef}
         role="dialog"
       >
-        <div className="flex items-start justify-between gap-3 border-b border-slate-200 p-4">
+        <div className="sticky top-0 z-10 border-b border-slate-200 bg-white p-4 pr-16">
           <div className="min-w-0">
             <h2 className="break-words text-base font-semibold text-slate-950" id="bottom-drawer-title">
               {title}
@@ -110,17 +109,16 @@ export function BottomDrawer({
               </p>
             ) : null}
           </div>
-          <Button
-            aria-label={closeLabel}
-            className="h-10 w-10 shrink-0 p-0"
-            icon={<X aria-hidden size={18} />}
-            onClick={onClose}
-            ref={closeButtonRef}
-            variant="ghost"
-          >
-            <span className="sr-only">Close</span>
-          </Button>
         </div>
+        <button
+          aria-label={closeLabel}
+          className="absolute right-3 top-3 z-20 inline-grid h-10 w-10 place-items-center rounded-md border border-slate-300 bg-white text-slate-900 shadow-sm transition hover:border-slate-400 hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700"
+          onClick={onClose}
+          ref={closeButtonRef}
+          type="button"
+        >
+          <X aria-hidden className="h-5 w-5 stroke-[2.5]" />
+        </button>
         <div className="max-h-[calc(88vh-5rem)] overflow-y-auto overscroll-contain p-3 sm:p-4">
           {children}
         </div>

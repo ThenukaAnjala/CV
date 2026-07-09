@@ -135,4 +135,14 @@ describe("ResumeBuilder browser workflows", () => {
       expect(nameInput).toHaveValue("");
     });
   });
+
+  it("closes confirmation popups from the cross icon", async () => {
+    const user = userEvent.setup();
+    render(<ResumeBuilder />);
+
+    await user.click(screen.getByRole("button", { name: "Reset Resume" }));
+    await user.click(screen.getByRole("button", { name: "Close dialog" }));
+
+    expect(screen.queryByRole("dialog", { name: "Reset this resume?" })).not.toBeInTheDocument();
+  });
 });

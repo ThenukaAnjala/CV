@@ -1,6 +1,7 @@
 "use client";
 
-import { FileCheck2, FileJson, Mail, RotateCcw, ShieldCheck, Sparkles, Upload } from "lucide-react";
+import { FileJson, Mail, RotateCcw, ShieldCheck, Sparkles, Upload } from "lucide-react";
+import { AppLogo } from "@/components/brand/AppLogo";
 import { Button } from "@/components/ui/Button";
 import { StatusMessage } from "@/components/ui/StatusMessage";
 import { ExportActions } from "@/components/export/ExportActions";
@@ -35,9 +36,7 @@ export function BuilderHeader({
         <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
           <div className="min-w-0 space-y-3">
             <div className="flex min-w-0 items-center gap-3">
-              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-slate-950 text-white shadow-sm ring-1 ring-slate-900/10">
-                <FileCheck2 aria-hidden size={22} />
-              </span>
+              <AppLogo className="h-12 w-12 shrink-0 rounded-lg shadow-sm ring-1 ring-slate-900/10" />
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <h1 className="text-2xl font-semibold tracking-tight text-slate-950">{APP_NAME}</h1>
