@@ -9,6 +9,7 @@ import {
 } from "@react-pdf/renderer";
 import type { ReactElement } from "react";
 import type { ResumeData, SectionKey } from "@/types/resume";
+import { getPersonalContactItems, getResumeLinkDisplayItems } from "@/lib/resume/displayLinks";
 import { formatDateRange, getOrderedSections, hasText, joinNonEmpty } from "@/lib/resume/format";
 import { normalizeResumeData } from "@/lib/resume/normalizers";
 
@@ -26,6 +27,7 @@ const styles = StyleSheet.create({
   paragraph: { lineHeight: 1.25 },
   bulletRow: { flexDirection: "row", gap: 5, marginTop: 2, paddingLeft: 10 },
   bulletText: { flex: 1, lineHeight: 1.2 },
+  projectLinks: { marginTop: 2 },
   skillRow: { flexDirection: "row", gap: 10, marginBottom: 3 },
   skillLabel: { width: 96, fontWeight: 700 },
   skillValues: { flex: 1 },
@@ -54,19 +56,28 @@ function ResumePdfDocument({ data }: { data: ResumeData }): ReactElement {
 }
 
 function Header({ data }: { data: ResumeData }) {
-  const contacts = [
-    data.personal.email,
-    data.personal.phone,
-    data.personal.location,
-    data.personal.website,
-    ...data.personal.links.map((link) => `${link.label}: ${link.url}`)
-  ].filter(Boolean);
+  const contacts = getPersonalContactItems(data.personal);
 
   return (
     <View style={styles.header}>
       {data.personal.fullName ? <Text style={styles.name}>{data.personal.fullName}</Text> : null}
       {data.personal.headline ? <Text style={styles.headline}>{data.personal.headline}</Text> : null}
-      {contacts.length > 0 ? <Text style={styles.contact}>{contacts.join(" | ")}</Text> : null}
+      {contacts.length > 0 ? (
+        <Text style={styles.contact}>
+          {contacts.map((item, index) => (
+            <Text key={item.id}>
+              {index > 0 ? " | " : ""}
+              {item.kind === "link" ? (
+                <Link src={item.href} style={styles.link}>
+                  {item.label}
+                </Link>
+              ) : (
+                item.label
+              )}
+            </Text>
+          ))}
+        </Text>
+      ) : null}
     </View>
   );
 }
@@ -117,14 +128,33 @@ function renderSection(data: ResumeData, key: SectionKey): ReactElement | ReactE
     ));
   }
   if (key === "projects") {
-    return data.projects.filter((item) => !item.hidden).map((item) => (
-      <View key={item.id} wrap={false}>
-        <EntryHeader date={formatDateRange(item.startDate, item.endDate)} left={joinNonEmpty([item.name, item.role], ", ")} />
-        {item.description ? <Text style={styles.paragraph}>{item.description}</Text> : null}
-        {item.links.map((link) => <Link key={link.id} src={link.url} style={styles.link}>{`${link.label}: ${link.url}`}</Link>)}
-        <Bullets bullets={item.bullets} />
-      </View>
-    ));
+    return data.projects.filter((item) => !item.hidden).map((item) => {
+      const links = getResumeLinkDisplayItems(item.links);
+
+      return (
+        <View key={item.id} wrap={false}>
+          <EntryHeader date={formatDateRange(item.startDate, item.endDate)} left={joinNonEmpty([item.name, item.role], ", ")} />
+          {item.description ? <Text style={styles.paragraph}>{item.description}</Text> : null}
+          {links.length > 0 ? (
+            <Text style={styles.projectLinks}>
+              {links.map((link, index) => (
+                <Text key={link.id}>
+                  {index > 0 ? " | " : ""}
+                  {link.kind === "link" ? (
+                    <Link src={link.href} style={styles.link}>
+                      {link.label}
+                    </Link>
+                  ) : (
+                    link.label
+                  )}
+                </Text>
+              ))}
+            </Text>
+          ) : null}
+          <Bullets bullets={item.bullets} />
+        </View>
+      );
+    });
   }
   if (key === "skills") {
     return data.skillGroups.filter((group) => !group.hidden).map((group) => (

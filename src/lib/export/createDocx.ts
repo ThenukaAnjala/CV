@@ -10,8 +10,10 @@ import {
   TabStopType,
   TextRun
 } from "docx";
-import type { ISectionOptions } from "docx";
+import type { ISectionOptions, ParagraphChild } from "docx";
 import type { ResumeBullet, ResumeData, SectionKey } from "@/types/resume";
+import { getPersonalContactItems, getResumeLinkDisplayItem } from "@/lib/resume/displayLinks";
+import type { ResumeDisplayItem } from "@/lib/resume/displayLinks";
 import { formatDateRange, getOrderedSections, hasText, joinNonEmpty } from "@/lib/resume/format";
 import { normalizeResumeData } from "@/lib/resume/normalizers";
 
@@ -64,13 +66,7 @@ function createSection(data: ResumeData): ISectionOptions {
 }
 
 function headerParagraphs(data: ResumeData): Paragraph[] {
-  const contacts = [
-    data.personal.email,
-    data.personal.phone,
-    data.personal.location,
-    data.personal.website,
-    ...data.personal.links.map((link) => `${link.label}: ${link.url}`)
-  ].filter(Boolean);
+  const contacts = getPersonalContactItems(data.personal);
 
   return [
     data.personal.fullName
@@ -79,7 +75,7 @@ function headerParagraphs(data: ResumeData): Paragraph[] {
     data.personal.headline
       ? new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: data.personal.headline, bold: true, size: 22 })] })
       : new Paragraph({}),
-    contacts.length > 0 ? new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: contacts.join(" | "), size: 19 })] }) : new Paragraph({})
+    contacts.length > 0 ? new Paragraph({ alignment: AlignmentType.CENTER, children: inlineLinkChildren(contacts, 19) }) : new Paragraph({})
   ];
 }
 
@@ -115,14 +111,30 @@ function bulletParagraphs(bullets: ResumeBullet[]): Paragraph[] {
 }
 
 function linkParagraph(label: string, url: string): Paragraph {
+  const link = getResumeLinkDisplayItem({ id: "external-link", label, url });
+  if (!link) return new Paragraph({});
+
   return new Paragraph({
-    children: [
-      new ExternalHyperlink({
-        children: [new TextRun({ text: label ? `${label}: ${url}` : url, style: "Hyperlink" })],
-        link: url
-      })
-    ]
+    children: [inlineLinkChild(link)]
   });
+}
+
+function inlineLinkChildren(items: readonly ResumeDisplayItem[], size?: number): ParagraphChild[] {
+  return items.flatMap((item, index) => [
+    ...(index > 0 ? [new TextRun({ text: " | ", size })] : []),
+    inlineLinkChild(item, size)
+  ]);
+}
+
+function inlineLinkChild(item: ResumeDisplayItem, size?: number): ParagraphChild {
+  if (item.kind === "link") {
+    return new ExternalHyperlink({
+      children: [new TextRun({ text: item.label, style: "Hyperlink", size })],
+      link: item.href
+    });
+  }
+
+  return new TextRun({ text: item.label, size });
 }
 
 function renderSection(data: ResumeData, key: SectionKey): Paragraph[] {

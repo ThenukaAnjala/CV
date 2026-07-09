@@ -4,6 +4,7 @@ import { EntryHeader } from "./EntryHeader";
 import { BulletList } from "./BulletList";
 import { SkillsRows } from "./SkillsRows";
 import type { ResumeData, SectionKey } from "@/types/resume";
+import { getResumeLinkDisplayItems } from "@/lib/resume/displayLinks";
 import { formatDateRange, getOrderedSections, hasText, joinNonEmpty } from "@/lib/resume/format";
 import { normalizeResumeData } from "@/lib/resume/normalizers";
 import { cn } from "@/lib/ui/cn";
@@ -71,14 +72,33 @@ function renderSection(resume: ResumeData, key: SectionKey) {
     ));
   }
   if (key === "projects") {
-    return resume.projects.filter((item) => !item.hidden).map((item) => (
-      <div key={item.id}>
-        <EntryHeader date={formatDateRange(item.startDate, item.endDate)} primary={item.name} secondary={item.role} />
-        {item.description ? <p className="mt-1 break-words text-[10pt] leading-snug">{item.description}</p> : null}
-        {item.links.length > 0 ? <p className="mt-1 break-words text-[9.5pt] text-blue-700">{item.links.map((link) => `${link.label}: ${link.url}`).join(" | ")}</p> : null}
-        <BulletList bullets={item.bullets} />
-      </div>
-    ));
+    return resume.projects.filter((item) => !item.hidden).map((item) => {
+      const links = getResumeLinkDisplayItems(item.links);
+
+      return (
+        <div key={item.id}>
+          <EntryHeader date={formatDateRange(item.startDate, item.endDate)} primary={item.name} secondary={item.role} />
+          {item.description ? <p className="mt-1 break-words text-[10pt] leading-snug">{item.description}</p> : null}
+          {links.length > 0 ? (
+            <p className="mt-1 break-words text-[9.5pt]">
+              {links.map((link, index) => (
+                <span key={link.id}>
+                  {index > 0 ? " | " : null}
+                  {link.kind === "link" ? (
+                    <a className="text-blue-700 underline" href={link.href} rel="noreferrer" target="_blank">
+                      {link.label}
+                    </a>
+                  ) : (
+                    link.label
+                  )}
+                </span>
+              ))}
+            </p>
+          ) : null}
+          <BulletList bullets={item.bullets} />
+        </div>
+      );
+    });
   }
   if (key === "skills") return <SkillsRows groups={resume.skillGroups.filter((group) => !group.hidden)} />;
   if (key === "certifications") {
