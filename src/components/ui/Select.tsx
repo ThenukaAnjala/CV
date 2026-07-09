@@ -18,7 +18,7 @@ export function Select({ label, error, className, id, children, ...props }: Sele
         aria-describedby={errorId}
         aria-invalid={Boolean(error)}
         className={cn(
-          "mt-1 block min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 shadow-sm outline-none hover:border-slate-400 focus:border-sky-700 focus:ring-2 focus:ring-sky-100",
+          "mt-1 block min-h-11 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-base text-slate-950 shadow-sm outline-none hover:border-slate-400 focus:border-sky-700 focus:ring-2 focus:ring-sky-100 sm:text-sm",
           className
         )}
         id={inputId}

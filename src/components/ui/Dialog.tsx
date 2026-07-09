@@ -28,7 +28,7 @@ export function Dialog({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 p-4">
+    <div className="ios-modal-shell fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45">
       <section
         aria-describedby="dialog-description"
         aria-labelledby="dialog-title"

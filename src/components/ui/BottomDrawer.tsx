@@ -82,7 +82,7 @@ export function BottomDrawer({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end bg-slate-950/50 p-0 sm:p-4 xl:hidden">
+    <div className="ios-drawer-shell fixed inset-0 z-50 flex items-end bg-slate-950/50 xl:hidden">
       <button
         aria-label="Close drawer backdrop"
         className="absolute inset-0 cursor-default"
@@ -94,7 +94,7 @@ export function BottomDrawer({
         aria-describedby={description ? "bottom-drawer-description" : undefined}
         aria-labelledby="bottom-drawer-title"
         aria-modal="true"
-        className="relative max-h-[88vh] w-full overflow-hidden rounded-t-lg bg-white shadow-2xl sm:mx-auto sm:max-w-2xl sm:rounded-lg"
+        className="relative max-h-[88svh] w-full overflow-hidden rounded-t-lg bg-white shadow-2xl sm:mx-auto sm:max-w-2xl sm:rounded-lg"
         ref={drawerRef}
         role="dialog"
       >
@@ -119,7 +119,7 @@ export function BottomDrawer({
         >
           <X aria-hidden className="h-5 w-5 stroke-[2.5]" />
         </button>
-        <div className="max-h-[calc(88vh-5rem)] overflow-y-auto overscroll-contain p-3 sm:p-4">
+        <div className="max-h-[calc(88svh-5rem)] overflow-y-auto overscroll-contain p-3 sm:p-4">
           {children}
         </div>
       </section>

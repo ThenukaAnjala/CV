@@ -39,7 +39,7 @@ export function MonthYearInput({
             aria-describedby={errorId}
             aria-invalid={Boolean(error)}
             className={cn(
-              "block min-h-11 w-full rounded-md border border-slate-300 bg-white py-2 pl-10 pr-3 text-sm text-slate-950 shadow-sm outline-none transition hover:border-slate-400 focus:border-sky-700 focus:ring-2 focus:ring-sky-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500",
+              "block min-h-11 w-full rounded-md border border-slate-300 bg-white py-2 pl-10 pr-3 text-base text-slate-950 shadow-sm outline-none transition hover:border-slate-400 focus:border-sky-700 focus:ring-2 focus:ring-sky-100 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500 sm:text-sm",
               className
             )}
             disabled={disabled}
