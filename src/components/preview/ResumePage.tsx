@@ -70,7 +70,11 @@ function renderSection(resume: ResumeData, key: SectionKey) {
   if (key === "experience") {
     return resume.experience.filter((item) => !item.hidden).map((item) => (
       <div key={item.id}>
-        <EntryHeader date={formatDateRange(item.startDate, item.endDate, item.isCurrent)} meta={item.location} primary={item.position} secondary={item.company} />
+        <EntryHeader
+          date={formatDateRange(item.startDate, item.endDate, item.isCurrent)}
+          primary={item.position}
+          subline={joinNonEmpty([item.company, item.location], ", ")}
+        />
         <BulletList bullets={item.bullets} />
       </div>
     ));

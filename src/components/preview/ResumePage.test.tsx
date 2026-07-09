@@ -9,4 +9,11 @@ describe("ResumePage", () => {
     expect(screen.getByText("Bachelor of Science in Computing")).toBeInTheDocument();
     expect(screen.getByText("Example University, Example City")).toBeInTheDocument();
   });
+
+  it("renders experience company and location on the second line", () => {
+    render(<ResumePage data={createCompleteResume()} />);
+
+    expect(screen.getByText("Frontend Engineer")).toBeInTheDocument();
+    expect(screen.getByText("Example Software Company, Example City")).toBeInTheDocument();
+  });
 });

@@ -102,12 +102,12 @@ function entryHeader(left: string, date?: string, spacingAfter?: number): Paragr
   });
 }
 
-function educationHeader(qualification: string, institution: string, location: string, date?: string): Paragraph[] {
-  const schoolLine = joinNonEmpty([institution, location], ", ");
+function twoLineEntryHeader(primary: string, subline: string, date?: string): Paragraph[] {
+  const secondaryLine = joinNonEmpty([subline], ", ");
 
   return [
-    entryHeader(qualification, date, schoolLine ? 0 : undefined),
-    ...(schoolLine ? [new Paragraph({ children: [new TextRun(schoolLine)] })] : [])
+    entryHeader(primary, date, secondaryLine ? 0 : undefined),
+    ...(secondaryLine ? [new Paragraph({ children: [new TextRun(secondaryLine)] })] : [])
   ];
 }
 
@@ -151,13 +151,13 @@ function renderSection(data: ResumeData, key: SectionKey): Paragraph[] {
   if (key === "summary") return [new Paragraph({ children: [new TextRun(data.summary)] })];
   if (key === "education") {
     return data.education.filter((item) => !item.hidden).flatMap((item) => [
-      ...educationHeader(item.qualification, item.institution, item.location, formatDateRange(item.startDate, item.endDate)),
+      ...twoLineEntryHeader(item.qualification, joinNonEmpty([item.institution, item.location], ", "), formatDateRange(item.startDate, item.endDate)),
       ...bulletParagraphs(item.details)
     ]);
   }
   if (key === "experience") {
     return data.experience.filter((item) => !item.hidden).flatMap((item) => [
-      entryHeader(joinNonEmpty([item.position, item.company, item.location], ", "), formatDateRange(item.startDate, item.endDate, item.isCurrent)),
+      ...twoLineEntryHeader(item.position, joinNonEmpty([item.company, item.location], ", "), formatDateRange(item.startDate, item.endDate, item.isCurrent)),
       ...bulletParagraphs(item.bullets)
     ]);
   }

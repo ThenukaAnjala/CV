@@ -131,7 +131,11 @@ function renderSection(data: ResumeData, key: SectionKey): ReactElement | ReactE
   if (key === "experience") {
     return data.experience.filter((item) => !item.hidden).map((item) => (
       <View key={item.id} wrap={false}>
-        <EntryHeader date={formatDateRange(item.startDate, item.endDate, item.isCurrent)} left={joinNonEmpty([item.position, item.company, item.location], ", ")} />
+        <EntryHeader
+          date={formatDateRange(item.startDate, item.endDate, item.isCurrent)}
+          left={item.position}
+          subline={joinNonEmpty([item.company, item.location], ", ")}
+        />
         <Bullets bullets={item.bullets} />
       </View>
     ));
