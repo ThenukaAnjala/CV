@@ -105,7 +105,7 @@ export function ResumeBuilder() {
 
   return (
     <FormProvider {...methods}>
-      <div className="min-h-screen bg-[#eef3f8]">
+      <div className="min-h-screen bg-[#eef3f8] xl:flex xl:h-screen xl:flex-col xl:overflow-hidden">
         <BuilderHeader
           data={resume}
           onExportJson={exportJson}

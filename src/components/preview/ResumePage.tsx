@@ -31,12 +31,12 @@ export function ResumePage({
   const paperSize = getResumePaperSize(paperSizeKey);
   const hasContent = resumeHasContent(resume);
   const articleStyle = displayMode === "document" ? getArticleStyle(paperSize, paginated) : undefined;
-  const emptyStateStyle = displayMode === "document" ? { minHeight: `${getContentHeightMm(paperSize)}mm` } : undefined;
+  const emptyStateStyle = displayMode === "document" ? { minHeight: 0 } : undefined;
   const content = !hasContent ? (
     <div
       className={cn(
-        "flex items-center justify-center text-center text-sm text-slate-500",
-        displayMode === "mobile" ? "min-h-[60svh]" : ""
+        "text-center text-sm text-slate-500",
+        displayMode === "mobile" ? "flex min-h-[60svh] items-center justify-center" : "pt-24"
       )}
       style={emptyStateStyle}
     >

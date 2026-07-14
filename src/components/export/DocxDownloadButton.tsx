@@ -43,7 +43,7 @@ export function DocxDownloadButton({
   }
 
   return (
-    <Button className="w-full sm:w-auto" disabled={busy} icon={<FileDown aria-hidden size={16} />} onClick={handleDownload} variant="secondary">
+    <Button className="w-full sm:w-auto" disabled={busy} icon={<FileDown aria-hidden size={15} />} onClick={handleDownload} size="sm" variant="secondary">
       Download Word
     </Button>
   );

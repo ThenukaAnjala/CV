@@ -31,10 +31,10 @@ export function BuilderWorkspace({
   const sectionSettings = data.sectionSettings ?? [];
 
   return (
-    <main className="mx-auto max-w-[1800px] space-y-3 p-2 pb-6 sm:space-y-4 sm:p-4">
+    <main className="mx-auto flex w-full max-w-[1800px] flex-1 flex-col space-y-3 p-2 pb-6 sm:space-y-4 sm:p-4 xl:min-h-0 xl:overflow-hidden xl:pb-4">
       <MobileBuilderTabs mode={mobileMode} onModeChange={onMobileModeChange} />
-      <div className="grid gap-3 sm:gap-4 xl:grid-cols-[minmax(320px,44%)_minmax(0,56%)]">
-        <div className={mobileMode === "edit" ? "block" : "hidden xl:block"}>
+      <div className="grid flex-1 gap-3 sm:gap-4 xl:min-h-0 xl:grid-cols-[minmax(360px,42%)_minmax(0,58%)]">
+        <div className={mobileMode === "edit" ? "block xl:min-h-0 xl:overflow-hidden" : "hidden xl:block xl:min-h-0 xl:overflow-hidden"}>
           {isMobileLayout ? (
             <MobileSectionLauncher
               activePanel={activePanel}
@@ -43,21 +43,21 @@ export function BuilderWorkspace({
               settings={sectionSettings}
             />
           ) : (
-            <div className="grid gap-3 sm:gap-4 xl:grid-cols-[230px_minmax(0,1fr)]">
+            <div className="grid gap-3 sm:gap-4 xl:h-full xl:min-h-0 xl:grid-cols-[240px_minmax(0,1fr)]">
               <BuilderNavigation
                 activePanel={activePanel}
                 onActivePanelChange={onActivePanelChange}
                 onSettingsChange={onSettingsChange}
                 settings={sectionSettings}
               />
-              <div className="min-w-0 space-y-4">
+              <div className="scroll-area min-w-0 space-y-4 xl:min-h-0 xl:overflow-auto xl:pr-1">
                 <BuilderPanel activePanel={activePanel} data={data} />
               </div>
             </div>
           )}
         </div>
-        <div className={mobileMode === "preview" ? "block" : "hidden xl:block"}>
-          <div className="xl:sticky xl:top-36">
+        <div className={mobileMode === "preview" ? "block xl:min-h-0" : "hidden xl:block xl:min-h-0"}>
+          <div className="xl:h-full xl:min-h-0">
             <ResumePreview data={data} onPaperSizeChange={onPaperSizeChange} paperSizeKey={paperSizeKey} />
           </div>
         </div>

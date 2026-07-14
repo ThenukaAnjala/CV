@@ -90,8 +90,8 @@ export function ResumePreview({
   }
 
   return (
-    <section className="space-y-3" aria-label="Resume preview">
-      <div className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
+    <section className="flex h-full min-h-0 flex-col gap-2" aria-label="Resume preview">
+      <div className="shrink-0 rounded-lg border border-slate-200 bg-white p-2 shadow-sm">
         <PreviewControls
           displayMode={isMobileLayout ? "mobile" : "document"}
           onBoundaryChange={setShowBoundary}
@@ -108,7 +108,7 @@ export function ResumePreview({
       <OverflowNotice pageCount={pageCount} />
       <div
         ref={previewFrameRef}
-        className="max-h-[calc(100svh-8rem)] overflow-auto rounded-lg border border-slate-300 bg-slate-300 p-2 shadow-inner sm:max-h-[calc(100vh-13rem)] sm:p-4"
+        className="scroll-area min-h-[60svh] flex-1 overflow-auto rounded-lg border border-slate-300 bg-slate-300 p-2 shadow-inner sm:p-3 xl:min-h-0"
       >
         {isMobileLayout ? (
           <div

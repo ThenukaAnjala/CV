@@ -32,15 +32,16 @@ export function PreviewControls({
   const isMobilePreview = displayMode === "mobile";
 
   return (
-    <div className="grid gap-3 sm:flex sm:flex-wrap sm:items-end">
+    <div className="grid gap-2 sm:flex sm:flex-wrap sm:items-end">
       {isMobilePreview ? (
         <span className="inline-flex min-h-9 items-center rounded-md border border-sky-200 bg-sky-50 px-3 text-sm font-semibold text-sky-900">
           Mobile preview
         </span>
       ) : (
         <>
-          <div className="min-w-0 sm:w-44">
+          <div className="min-w-0 sm:w-40">
             <Select
+              className="min-h-9 py-1.5 text-sm"
               label="Paper size"
               onChange={(event) => onPaperSizeChange(event.target.value as ResumePaperSizeKey)}
               value={paperSize}
@@ -52,8 +53,8 @@ export function PreviewControls({
               ))}
             </Select>
           </div>
-          <div className="min-w-0 sm:w-36">
-            <Select label="Preview zoom" onChange={(event) => onZoomChange(event.target.value as PreviewZoom)} value={zoom}>
+          <div className="min-w-0 sm:w-32">
+            <Select className="min-h-9 py-1.5 text-sm" label="Preview zoom" onChange={(event) => onZoomChange(event.target.value as PreviewZoom)} value={zoom}>
               <option value="fit">Fit width</option>
               <option value="0.75">75%</option>
               <option value="0.9">90%</option>

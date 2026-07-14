@@ -1,5 +1,5 @@
 import { Eye, EyeOff, MoveDown, MoveUp } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import type { ReactNode } from "react";
 import { moveItem } from "@/lib/resume/arrayActions";
 import type { SectionSetting } from "@/types/resume";
 
@@ -11,13 +11,13 @@ export function SectionOrderControls({
   onSettingsChange: (settings: SectionSetting[]) => void;
 }) {
   return (
-    <div className="mt-3 space-y-2">
+    <div className="mt-2 space-y-1.5">
       {settings.map((section, index) => (
-        <div className="rounded-md border border-slate-200 bg-slate-50 p-2" key={section.key}>
-          <p className="break-words text-sm font-semibold text-slate-900">{section.title}</p>
-          <div className="mt-2 flex flex-wrap gap-1">
-            <Button
-              icon={section.visible ? <EyeOff aria-hidden size={14} /> : <Eye aria-hidden size={14} />}
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-2 py-1.5" key={section.key}>
+          <p className="truncate text-sm font-semibold text-slate-900">{section.title}</p>
+          <div className="flex items-center gap-1">
+            <IconButton
+              label={section.visible ? `Hide ${section.title}` : `Show ${section.title}`}
               onClick={() =>
                 onSettingsChange(
                   settings.map((item) =>
@@ -25,32 +25,51 @@ export function SectionOrderControls({
                   )
                 )
               }
-              size="sm"
-              variant="ghost"
             >
-              {section.visible ? "Hide" : "Show"}
-            </Button>
-            <Button
+              {section.visible ? <EyeOff aria-hidden size={14} /> : <Eye aria-hidden size={14} />}
+            </IconButton>
+            <IconButton
               disabled={index === 0}
-              icon={<MoveUp aria-hidden size={14} />}
+              label={`Move ${section.title} up`}
               onClick={() => onSettingsChange(moveItem(settings, index, -1))}
-              size="sm"
-              variant="ghost"
             >
-              Up
-            </Button>
-            <Button
+              <MoveUp aria-hidden size={14} />
+            </IconButton>
+            <IconButton
               disabled={index === settings.length - 1}
-              icon={<MoveDown aria-hidden size={14} />}
+              label={`Move ${section.title} down`}
               onClick={() => onSettingsChange(moveItem(settings, index, 1))}
-              size="sm"
-              variant="ghost"
             >
-              Down
-            </Button>
+              <MoveDown aria-hidden size={14} />
+            </IconButton>
           </div>
         </div>
       ))}
     </div>
+  );
+}
+
+function IconButton({
+  children,
+  disabled,
+  label,
+  onClick
+}: {
+  children: ReactNode;
+  disabled?: boolean;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      aria-label={label}
+      className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-transparent text-slate-600 transition hover:border-slate-200 hover:bg-white hover:text-slate-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700 disabled:cursor-not-allowed disabled:opacity-40"
+      disabled={disabled}
+      onClick={onClick}
+      title={label}
+      type="button"
+    >
+      {children}
+    </button>
   );
 }
