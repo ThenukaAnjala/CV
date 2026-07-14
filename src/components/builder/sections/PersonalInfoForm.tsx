@@ -27,7 +27,7 @@ export function PersonalInfoForm() {
         <Input error={getFieldError(errors, "personal.fullName")} label="Full name" placeholder="YOUR NAME" {...register("personal.fullName")} />
         <Input error={getFieldError(errors, "personal.headline")} label="Target headline" placeholder="TARGET JOB TITLE" {...register("personal.headline")} />
         <Input error={getFieldError(errors, "personal.email")} label="Email" placeholder="name@example.com" type="email" {...register("personal.email")} />
-        <Input error={getFieldError(errors, "personal.phone")} label="Phone" placeholder="+1 555 0100" type="tel" {...register("personal.phone")} />
+        <Input error={getFieldError(errors, "personal.phone")} label="Phone" placeholder="+94 70 123 4567" type="tel" {...register("personal.phone")} />
         <Input error={getFieldError(errors, "personal.location")} label="Location" placeholder="City, State" {...register("personal.location")} />
       </div>
       <LinkFields
