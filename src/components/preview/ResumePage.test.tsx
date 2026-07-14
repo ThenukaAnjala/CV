@@ -38,4 +38,31 @@ describe("ResumePage", () => {
     expect(link).toHaveAttribute("href", "https://certificate.example.com");
     expect(screen.queryByText("https://certificate.example.com")).not.toBeInTheDocument();
   });
+
+  it("uses the selected paper dimensions for desktop preview", () => {
+    const { container } = render(<ResumePage data={createCompleteResume()} paperSizeKey="letter" />);
+    const page = container.querySelector("article");
+
+    if (!page) throw new Error("Missing resume page");
+
+    expect(page).toHaveStyle({ minHeight: "279.4mm", width: "215.9mm" });
+  });
+
+  it("flows document content into paginated paper columns", () => {
+    const { container } = render(
+      <ResumePage data={createCompleteResume()} page={2} paginated paperSizeKey="legal" />
+    );
+    const page = container.querySelector("article");
+    const flow = page?.firstElementChild;
+
+    if (!(flow instanceof HTMLElement)) throw new Error("Missing paginated content flow");
+
+    expect(page).toHaveStyle({ height: "355.6mm", width: "215.9mm" });
+    expect(flow).toHaveStyle({
+      columnGap: "18mm",
+      columnWidth: "181.9mm",
+      height: "325.6mm",
+      transform: "translateX(-199.9mm)"
+    });
+  });
 });

@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
+import { RESUME_PAPER_SIZES, type ResumePaperSizeKey } from "@/constants/paper";
 
 export type PreviewZoom = "0.75" | "0.9" | "1" | "fit";
 type PreviewDisplayMode = "document" | "mobile";
@@ -10,18 +11,22 @@ export function PreviewControls({
   zoom,
   page,
   pageCount,
+  paperSize,
   showBoundary,
   onZoomChange,
   onBoundaryChange,
+  onPaperSizeChange,
   onPageChange
 }: {
   displayMode: PreviewDisplayMode;
   zoom: PreviewZoom;
   page: number;
   pageCount: number;
+  paperSize: ResumePaperSizeKey;
   showBoundary: boolean;
   onZoomChange: (zoom: PreviewZoom) => void;
   onBoundaryChange: (value: boolean) => void;
+  onPaperSizeChange: (paperSize: ResumePaperSizeKey) => void;
   onPageChange: (page: number) => void;
 }) {
   const isMobilePreview = displayMode === "mobile";
@@ -33,14 +38,29 @@ export function PreviewControls({
           Mobile preview
         </span>
       ) : (
-        <div className="min-w-0 sm:w-36">
-          <Select label="Preview zoom" onChange={(event) => onZoomChange(event.target.value as PreviewZoom)} value={zoom}>
-            <option value="fit">Fit width</option>
-            <option value="0.75">75%</option>
-            <option value="0.9">90%</option>
-            <option value="1">100%</option>
-          </Select>
-        </div>
+        <>
+          <div className="min-w-0 sm:w-44">
+            <Select
+              label="Paper size"
+              onChange={(event) => onPaperSizeChange(event.target.value as ResumePaperSizeKey)}
+              value={paperSize}
+            >
+              {RESUME_PAPER_SIZES.map((paper) => (
+                <option key={paper.key} value={paper.key}>
+                  {paper.label} ({paper.description})
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div className="min-w-0 sm:w-36">
+            <Select label="Preview zoom" onChange={(event) => onZoomChange(event.target.value as PreviewZoom)} value={zoom}>
+              <option value="fit">Fit width</option>
+              <option value="0.75">75%</option>
+              <option value="0.9">90%</option>
+              <option value="1">100%</option>
+            </Select>
+          </div>
+        </>
       )}
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:flex sm:flex-wrap">
         <Button className="w-full sm:w-auto" disabled={page <= 1} icon={<ChevronLeft aria-hidden size={16} />} onClick={() => onPageChange(page - 1)} size="sm" variant="secondary">
