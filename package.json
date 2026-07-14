@@ -4,7 +4,7 @@
   "private": true,
   "description": "Create, check, and export an ATS-friendly resume locally in your browser.",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",

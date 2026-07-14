@@ -18,7 +18,8 @@ import { formatDateRange, getOrderedSections, hasText, joinNonEmpty } from "@/li
 import { normalizeResumeData } from "@/lib/resume/normalizers";
 
 const PAGE_WIDTH_TWIPS = 11906;
-const CONTENT_RIGHT_TAB = 9360;
+const PAGE_MARGIN_TWIPS = 720;
+const CONTENT_RIGHT_TAB = PAGE_WIDTH_TWIPS - PAGE_MARGIN_TWIPS * 2;
 
 export async function createResumeDocxBlob(data: ResumeData): Promise<Blob> {
   const resume = normalizeResumeData(data);
@@ -58,7 +59,7 @@ function createSection(data: ResumeData): ISectionOptions {
     properties: {
       page: {
         size: { orientation: PageOrientation.PORTRAIT, width: PAGE_WIDTH_TWIPS, height: 16838 },
-        margin: { top: 720, right: 720, bottom: 720, left: 720 }
+        margin: { top: PAGE_MARGIN_TWIPS, right: PAGE_MARGIN_TWIPS, bottom: PAGE_MARGIN_TWIPS, left: PAGE_MARGIN_TWIPS }
       }
     },
     children: [...headerParagraphs(data), ...sectionParagraphs(data)]
