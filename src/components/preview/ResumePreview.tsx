@@ -5,15 +5,22 @@ import { OverflowNotice } from "./OverflowNotice";
 import { PreviewControls, type PreviewZoom } from "./PreviewControls";
 import { ResumePage } from "./ResumePage";
 import type { ResumeData } from "@/types/resume";
-import { DEFAULT_RESUME_PAPER_SIZE_KEY, getResumePaperSize, type ResumePaperSizeKey } from "@/constants/paper";
+import { getResumePaperSize, type ResumePaperSizeKey } from "@/constants/paper";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const CSS_PIXELS_PER_MM = 96 / 25.4;
 
-export function ResumePreview({ data }: { data: ResumeData }) {
+export function ResumePreview({
+  data,
+  paperSizeKey,
+  onPaperSizeChange
+}: {
+  data: ResumeData;
+  paperSizeKey: ResumePaperSizeKey;
+  onPaperSizeChange: (paperSize: ResumePaperSizeKey) => void;
+}) {
   const previewFrameRef = useRef<HTMLDivElement | null>(null);
   const contentFlowRef = useRef<HTMLDivElement | null>(null);
-  const [paperSizeKey, setPaperSizeKey] = useState<ResumePaperSizeKey>(DEFAULT_RESUME_PAPER_SIZE_KEY);
   const [zoom, setZoom] = useState<PreviewZoom>("fit");
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(1);
@@ -78,7 +85,7 @@ export function ResumePreview({ data }: { data: ResumeData }) {
   }, [updatePageCount]);
 
   function handlePaperSizeChange(nextPaperSize: ResumePaperSizeKey) {
-    setPaperSizeKey(nextPaperSize);
+    onPaperSizeChange(nextPaperSize);
     setPage(1);
   }
 

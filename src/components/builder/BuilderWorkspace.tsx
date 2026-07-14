@@ -1,4 +1,5 @@
 import { ResumePreview } from "@/components/preview/ResumePreview";
+import type { ResumePaperSizeKey } from "@/constants/paper";
 import type { ResumeData, SectionSetting } from "@/types/resume";
 import { BuilderNavigation } from "./BuilderNavigation";
 import { BuilderPanel } from "./BuilderPanel";
@@ -13,7 +14,9 @@ export function BuilderWorkspace({
   mobileMode,
   onActivePanelChange,
   onMobileModeChange,
-  onSettingsChange
+  onPaperSizeChange,
+  onSettingsChange,
+  paperSizeKey
 }: {
   activePanel: ActivePanel;
   data: ResumeData;
@@ -21,7 +24,9 @@ export function BuilderWorkspace({
   mobileMode: MobileMode;
   onActivePanelChange: (panel: ActivePanel) => void;
   onMobileModeChange: (mode: MobileMode) => void;
+  onPaperSizeChange: (paperSize: ResumePaperSizeKey) => void;
   onSettingsChange: (settings: SectionSetting[]) => void;
+  paperSizeKey: ResumePaperSizeKey;
 }) {
   const sectionSettings = data.sectionSettings ?? [];
 
@@ -53,7 +58,7 @@ export function BuilderWorkspace({
         </div>
         <div className={mobileMode === "preview" ? "block" : "hidden xl:block"}>
           <div className="xl:sticky xl:top-36">
-            <ResumePreview data={data} />
+            <ResumePreview data={data} onPaperSizeChange={onPaperSizeChange} paperSizeKey={paperSizeKey} />
           </div>
         </div>
       </div>

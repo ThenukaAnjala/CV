@@ -17,6 +17,13 @@ describe("resume export generation", () => {
     expect(blob.size).toBeGreaterThan(1000);
   });
 
+  it("creates exports for the selected preview paper size", async () => {
+    const resume = createCompleteResume();
+
+    await expect(createResumePdfBlob(resume, "letter")).resolves.toMatchObject({ type: "application/pdf" });
+    await expect(createResumeDocxBlob(resume, "legal")).resolves.toBeInstanceOf(Blob);
+  });
+
   it("allows downloads before a full name is entered", () => {
     const resume = createBlankResumeData();
 

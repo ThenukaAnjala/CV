@@ -12,17 +12,26 @@ import {
 } from "docx";
 import type { ISectionOptions, ParagraphChild } from "docx";
 import type { ResumeBullet, ResumeData, SectionKey } from "@/types/resume";
-import { getPersonalContactItems, getResumeLinkDisplayItem, getResumeLinkDisplayItems } from "@/lib/resume/displayLinks";
+import { DEFAULT_RESUME_PAPER_SIZE_KEY, RESUME_PAGE_MARGIN_MM, getResumePaperSize, type ResumePaperSize, type ResumePaperSizeKey } from "@/constants/paper";
+import { getPersonalContactItems, getResumeLinkDisplayItems } from "@/lib/resume/displayLinks";
 import type { ResumeDisplayItem } from "@/lib/resume/displayLinks";
 import { formatDateRange, getOrderedSections, hasText, joinNonEmpty } from "@/lib/resume/format";
 import { normalizeResumeData } from "@/lib/resume/normalizers";
 
-const PAGE_WIDTH_TWIPS = 11906;
-const PAGE_MARGIN_TWIPS = 720;
-const CONTENT_RIGHT_TAB = PAGE_WIDTH_TWIPS - PAGE_MARGIN_TWIPS * 2;
+const TWIPS_PER_MM = 1440 / 25.4;
+const LINE_SNUG_TWIPS = 275;
 
-export async function createResumeDocxBlob(data: ResumeData): Promise<Blob> {
+type DocxPaperLayout = {
+  contentRightTab: number;
+  height: number;
+  marginHorizontal: number;
+  marginVertical: number;
+  width: number;
+};
+
+export async function createResumeDocxBlob(data: ResumeData, paperSizeKey: ResumePaperSizeKey = DEFAULT_RESUME_PAPER_SIZE_KEY): Promise<Blob> {
   const resume = normalizeResumeData(data);
+  const layout = getDocxPaperLayout(getResumePaperSize(paperSizeKey));
   const doc = new Document({
     numbering: {
       config: [
@@ -34,7 +43,7 @@ export async function createResumeDocxBlob(data: ResumeData): Promise<Blob> {
               format: LevelFormat.BULLET,
               text: "\u2022",
               alignment: AlignmentType.LEFT,
-              style: { paragraph: { indent: { left: 360, hanging: 180 } } }
+              style: { paragraph: { indent: { left: 300, hanging: 180 }, spacing: { after: 0, before: 30, line: LINE_SNUG_TWIPS } } }
             }
           ]
         }
@@ -44,25 +53,42 @@ export async function createResumeDocxBlob(data: ResumeData): Promise<Blob> {
       default: {
         document: {
           run: { font: "Arial", size: 20 },
-          paragraph: { spacing: { after: 80 } }
+          paragraph: { spacing: { after: 0, line: LINE_SNUG_TWIPS } }
         }
       }
     },
-    sections: [createSection(resume)]
+    sections: [createSection(resume, layout)]
   });
 
   return Packer.toBlob(doc);
 }
 
-function createSection(data: ResumeData): ISectionOptions {
+function getDocxPaperLayout(paperSize: ResumePaperSize): DocxPaperLayout {
+  const width = toTwips(paperSize.widthMm);
+  const marginHorizontal = toTwips(RESUME_PAGE_MARGIN_MM.horizontal);
+
+  return {
+    contentRightTab: width - marginHorizontal * 2,
+    height: toTwips(paperSize.heightMm),
+    marginHorizontal,
+    marginVertical: toTwips(RESUME_PAGE_MARGIN_MM.vertical),
+    width
+  };
+}
+
+function toTwips(mm: number): number {
+  return Math.round(mm * TWIPS_PER_MM);
+}
+
+function createSection(data: ResumeData, layout: DocxPaperLayout): ISectionOptions {
   return {
     properties: {
       page: {
-        size: { orientation: PageOrientation.PORTRAIT, width: PAGE_WIDTH_TWIPS, height: 16838 },
-        margin: { top: PAGE_MARGIN_TWIPS, right: PAGE_MARGIN_TWIPS, bottom: PAGE_MARGIN_TWIPS, left: PAGE_MARGIN_TWIPS }
+        size: { orientation: PageOrientation.PORTRAIT, width: layout.width, height: layout.height },
+        margin: { top: layout.marginVertical, right: layout.marginHorizontal, bottom: layout.marginVertical, left: layout.marginHorizontal }
       }
     },
-    children: [...headerParagraphs(data), ...sectionParagraphs(data)]
+    children: [...headerParagraphs(data), ...sectionParagraphs(data, layout)]
   };
 }
 
@@ -70,45 +96,45 @@ function headerParagraphs(data: ResumeData): Paragraph[] {
   const contacts = getPersonalContactItems(data.personal);
 
   return [
-    data.personal.fullName
-      ? new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: data.personal.fullName.toUpperCase(), bold: true, size: 32 })] })
-      : new Paragraph({}),
-    data.personal.headline
-      ? new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: data.personal.headline, bold: true, size: 22 })] })
-      : new Paragraph({}),
-    contacts.length > 0 ? new Paragraph({ alignment: AlignmentType.CENTER, children: inlineLinkChildren(contacts, 19) }) : new Paragraph({})
+    ...(data.personal.fullName
+      ? [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: data.personal.fullName.toUpperCase(), bold: true, size: 36 })], spacing: { after: 0, line: 450 } })]
+      : []),
+    ...(data.personal.headline
+      ? [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: data.personal.headline, bold: true, size: 22 })], spacing: { after: 0, before: 30, line: LINE_SNUG_TWIPS } })]
+      : []),
+    ...(contacts.length > 0 ? [new Paragraph({ alignment: AlignmentType.CENTER, children: inlineLinkChildren(contacts, 19), spacing: { after: 0, before: 60, line: LINE_SNUG_TWIPS } })] : [])
   ];
 }
 
-function sectionParagraphs(data: ResumeData): Paragraph[] {
+function sectionParagraphs(data: ResumeData, layout: DocxPaperLayout): Paragraph[] {
   return getOrderedSections(data).flatMap((section) => {
     if (!section.visible || !sectionHasContent(data, section.key)) return [];
-    return [sectionHeading(section.title), ...renderSection(data, section.key)];
+    return [sectionHeading(section.title), ...renderSection(data, section.key, layout)];
   });
 }
 
 function sectionHeading(title: string): Paragraph {
   return new Paragraph({
-    spacing: { before: 160, after: 80 },
+    spacing: { before: 180, after: 90, line: LINE_SNUG_TWIPS },
     border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "111827" } },
     children: [new TextRun({ text: title.toUpperCase(), bold: true, size: 20 })]
   });
 }
 
-function entryHeader(left: string, date?: string, spacingAfter?: number): Paragraph {
+function entryHeader(left: string, date: string | undefined, layout: DocxPaperLayout, spacingAfter?: number): Paragraph {
   return new Paragraph({
-    spacing: spacingAfter === undefined ? undefined : { after: spacingAfter },
-    tabStops: [{ type: TabStopType.RIGHT, position: CONTENT_RIGHT_TAB }],
-    children: [new TextRun({ text: left, bold: true }), ...(date ? [new TextRun({ text: `\t${date}` })] : [])]
+    spacing: { after: spacingAfter ?? 0, line: LINE_SNUG_TWIPS },
+    tabStops: [{ type: TabStopType.RIGHT, position: layout.contentRightTab }],
+    children: [new TextRun({ text: left, bold: true, size: 21 }), ...(date ? [new TextRun({ text: `\t${date}`, size: 21 })] : [])]
   });
 }
 
-function twoLineEntryHeader(primary: string, subline: string, date?: string): Paragraph[] {
+function twoLineEntryHeader(primary: string, subline: string, date: string | undefined, layout: DocxPaperLayout): Paragraph[] {
   const secondaryLine = joinNonEmpty([subline], ", ");
 
   return [
-    entryHeader(primary, date, secondaryLine ? 0 : undefined),
-    ...(secondaryLine ? [new Paragraph({ children: [new TextRun(secondaryLine)] })] : [])
+    entryHeader(primary, date, layout),
+    ...(secondaryLine ? [new Paragraph({ children: [new TextRun({ text: secondaryLine, size: 20 })], spacing: { after: 0, line: LINE_SNUG_TWIPS } })] : [])
   ];
 }
 
@@ -116,18 +142,15 @@ function bulletParagraphs(bullets: ResumeBullet[]): Paragraph[] {
   return bullets.map((bullet) =>
     new Paragraph({
       numbering: { reference: "resume-bullets", level: 0 },
-      children: [new TextRun({ text: bullet.text })]
+      children: [new TextRun({ text: bullet.text, size: 20 })],
+      spacing: { after: 0, before: 30, line: LINE_SNUG_TWIPS }
     })
   );
 }
 
-function linkParagraph(label: string, url: string): Paragraph {
-  const link = getResumeLinkDisplayItem({ id: "external-link", label, url });
-  if (!link) return new Paragraph({});
-
-  return new Paragraph({
-    children: [inlineLinkChild(link)]
-  });
+function inlineDisplayItemsParagraph(items: readonly ResumeDisplayItem[]): Paragraph[] {
+  if (items.length === 0) return [];
+  return [new Paragraph({ children: inlineLinkChildren(items, 19), spacing: { after: 0, before: 60, line: LINE_SNUG_TWIPS } })];
 }
 
 function inlineLinkChildren(items: readonly ResumeDisplayItem[], size?: number): ParagraphChild[] {
@@ -148,46 +171,45 @@ function inlineLinkChild(item: ResumeDisplayItem, size?: number): ParagraphChild
   return new TextRun({ text: item.label, size });
 }
 
-function renderSection(data: ResumeData, key: SectionKey): Paragraph[] {
-  if (key === "summary") return [new Paragraph({ children: [new TextRun(data.summary)] })];
+function renderSection(data: ResumeData, key: SectionKey, layout: DocxPaperLayout): Paragraph[] {
+  if (key === "summary") return [new Paragraph({ children: [new TextRun({ text: data.summary, size: 20 })], spacing: { after: 0, line: LINE_SNUG_TWIPS } })];
   if (key === "education") {
     return data.education.filter((item) => !item.hidden).flatMap((item) => [
-      ...twoLineEntryHeader(item.qualification, joinNonEmpty([item.institution, item.location], ", "), formatDateRange(item.startDate, item.endDate)),
+      ...twoLineEntryHeader(item.qualification, joinNonEmpty([item.institution, item.location], ", "), formatDateRange(item.startDate, item.endDate), layout),
       ...bulletParagraphs(item.details)
     ]);
   }
   if (key === "experience") {
     return data.experience.filter((item) => !item.hidden).flatMap((item) => [
-      ...twoLineEntryHeader(item.position, joinNonEmpty([item.company, item.location], ", "), formatDateRange(item.startDate, item.endDate, item.isCurrent)),
+      ...twoLineEntryHeader(item.position, joinNonEmpty([item.company, item.location], ", "), formatDateRange(item.startDate, item.endDate, item.isCurrent), layout),
       ...bulletParagraphs(item.bullets)
     ]);
   }
   if (key === "projects") {
     return data.projects.filter((item) => !item.hidden).flatMap((item) => [
-      entryHeader(joinNonEmpty([item.name, item.role], ", "), formatDateRange(item.startDate, item.endDate)),
-      ...(item.description ? [new Paragraph({ children: [new TextRun(item.description)] })] : []),
-      ...item.links.map((link) => linkParagraph(link.label, link.url)),
+      entryHeader(joinNonEmpty([item.name, item.role], ", "), formatDateRange(item.startDate, item.endDate), layout),
+      ...(item.description ? [new Paragraph({ children: [new TextRun({ text: item.description, size: 20 })], spacing: { after: 0, before: 60, line: LINE_SNUG_TWIPS } })] : []),
+      ...inlineDisplayItemsParagraph(getResumeLinkDisplayItems(item.links)),
       ...bulletParagraphs(item.bullets)
     ]);
   }
   if (key === "skills") {
     return data.skillGroups.filter((group) => !group.hidden).map((group) =>
       new Paragraph({
-        tabStops: [{ type: TabStopType.RIGHT, position: CONTENT_RIGHT_TAB }],
-        children: [new TextRun({ text: `${group.label}:`, bold: true }), new TextRun(`\t${joinNonEmpty(group.values, ", ")}`)]
+        spacing: { after: 60, line: LINE_SNUG_TWIPS },
+        tabStops: [{ type: TabStopType.RIGHT, position: layout.contentRightTab }],
+        children: [new TextRun({ text: `${group.label}:`, bold: true, size: 20 }), new TextRun({ text: `\t${joinNonEmpty(group.values, ", ")}`, size: 20 })]
       })
     );
   }
   if (key === "certifications") {
     return data.certifications.filter((item) => !item.hidden).flatMap((item) => [
-      entryHeader(joinNonEmpty([item.name, item.issuer], ", "), item.year),
-      ...getResumeLinkDisplayItems(item.links).map((link) =>
-        link.kind === "link" ? new Paragraph({ children: [inlineLinkChild(link)] }) : new Paragraph({ children: [new TextRun(link.label)] })
-      )
+      entryHeader(joinNonEmpty([item.name, item.issuer], ", "), item.year, layout),
+      ...inlineDisplayItemsParagraph(getResumeLinkDisplayItems(item.links))
     ]);
   }
   return data.activities.filter((item) => !item.hidden).flatMap((item) => [
-    entryHeader(joinNonEmpty([item.role, item.organization], ", "), item.year),
+    entryHeader(joinNonEmpty([item.role, item.organization], ", "), item.year, layout),
     ...bulletParagraphs(item.bullets)
   ]);
 }

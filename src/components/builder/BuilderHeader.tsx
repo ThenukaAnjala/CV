@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { StatusMessage } from "@/components/ui/StatusMessage";
 import { ExportActions } from "@/components/export/ExportActions";
 import { APP_DEVELOPER, APP_NAME } from "@/constants/app";
+import type { ResumePaperSizeKey } from "@/constants/paper";
 import type { ResumeData } from "@/types/resume";
 
 export type PrivacyStatus = {
@@ -20,7 +21,8 @@ export function BuilderHeader({
   onNewResume,
   onReset,
   onExportJson,
-  onImportFile
+  onImportFile,
+  paperSizeKey
 }: {
   data: ResumeData;
   status: PrivacyStatus;
@@ -29,6 +31,7 @@ export function BuilderHeader({
   onReset: () => void;
   onExportJson: () => void | Promise<void>;
   onImportFile: (file: File) => void;
+  paperSizeKey: ResumePaperSizeKey;
 }) {
   return (
     <header className="top-0 z-30 border-b border-slate-200 bg-white/95 px-3 py-3 shadow-sm backdrop-blur sm:sticky sm:px-4">
@@ -94,7 +97,7 @@ export function BuilderHeader({
           <Button className="w-full sm:w-auto" icon={<RotateCcw aria-hidden size={16} />} onClick={onReset} variant="secondary">
             Reset Resume
           </Button>
-          <ExportActions data={data} onStatus={onStatus} />
+          <ExportActions data={data} onStatus={onStatus} paperSizeKey={paperSizeKey} />
         </div>
       </div>
     </header>

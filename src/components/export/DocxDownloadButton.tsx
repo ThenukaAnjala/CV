@@ -5,18 +5,21 @@ import { Button } from "@/components/ui/Button";
 import { downloadBlob } from "@/lib/download";
 import { getResumeExportFilename } from "@/lib/resume/filename";
 import { validateResumeForExport } from "@/lib/resume/validation";
+import type { ResumePaperSizeKey } from "@/constants/paper";
 import type { ResumeData } from "@/types/resume";
 
 export function DocxDownloadButton({
   data,
   busy,
   setBusy,
-  onStatus
+  onStatus,
+  paperSizeKey
 }: {
   data: ResumeData;
   busy: boolean;
   setBusy: (value: boolean) => void;
   onStatus: (message: string, tone: "neutral" | "success" | "error") => void;
+  paperSizeKey: ResumePaperSizeKey;
 }) {
   async function handleDownload() {
     const validationError = validateResumeForExport(data);
@@ -29,7 +32,7 @@ export function DocxDownloadButton({
     onStatus("Preparing Word document...", "neutral");
     try {
       const { createResumeDocxBlob } = await import("@/lib/export/createDocx");
-      const blob = await createResumeDocxBlob(data);
+      const blob = await createResumeDocxBlob(data, paperSizeKey);
       downloadBlob(blob, getResumeExportFilename(data, "docx"));
       onStatus("Word document ready", "success");
     } catch {

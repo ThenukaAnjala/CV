@@ -5,18 +5,21 @@ import { Button } from "@/components/ui/Button";
 import { downloadBlob } from "@/lib/download";
 import { getResumeExportFilename } from "@/lib/resume/filename";
 import { validateResumeForExport } from "@/lib/resume/validation";
+import type { ResumePaperSizeKey } from "@/constants/paper";
 import type { ResumeData } from "@/types/resume";
 
 export function PdfDownloadButton({
   data,
   busy,
   setBusy,
-  onStatus
+  onStatus,
+  paperSizeKey
 }: {
   data: ResumeData;
   busy: boolean;
   setBusy: (value: boolean) => void;
   onStatus: (message: string, tone: "neutral" | "success" | "error") => void;
+  paperSizeKey: ResumePaperSizeKey;
 }) {
   async function handleDownload() {
     const validationError = validateResumeForExport(data);
@@ -29,7 +32,7 @@ export function PdfDownloadButton({
     onStatus("Preparing PDF...", "neutral");
     try {
       const { createResumePdfBlob } = await import("@/lib/export/createPdf");
-      const blob = await createResumePdfBlob(data);
+      const blob = await createResumePdfBlob(data, paperSizeKey);
       downloadBlob(blob, getResumeExportFilename(data, "pdf"));
       onStatus("PDF ready", "success");
     } catch {

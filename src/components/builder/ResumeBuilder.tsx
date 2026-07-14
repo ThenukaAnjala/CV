@@ -15,6 +15,7 @@ import { parseResumeJson, serializeResumeJson } from "@/lib/resume/json";
 import { resumeDataSchema } from "@/schemas/resumeSchema";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import type { ResumeData, SectionSetting } from "@/types/resume";
+import { DEFAULT_RESUME_PAPER_SIZE_KEY, type ResumePaperSizeKey } from "@/constants/paper";
 import type { ActivePanel } from "./builderPanelConfig";
 
 export function ResumeBuilder() {
@@ -28,6 +29,7 @@ export function ResumeBuilder() {
   const [activePanel, setActivePanel] = useState<ActivePanel>("personal");
   const [mobileMode, setMobileMode] = useState<MobileMode>("edit");
   const [mobileDrawerPanel, setMobileDrawerPanel] = useState<ActivePanel | null>(null);
+  const [paperSizeKey, setPaperSizeKey] = useState<ResumePaperSizeKey>(DEFAULT_RESUME_PAPER_SIZE_KEY);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [pendingImport, setPendingImport] = useState<ResumeData | null>(null);
   const isMobileLayout = useMediaQuery("(max-width: 1279px)");
@@ -111,6 +113,7 @@ export function ResumeBuilder() {
           onNewResume={() => setConfirmAction("new")}
           onReset={() => setConfirmAction("reset")}
           onStatus={publishStatus}
+          paperSizeKey={paperSizeKey}
           status={status}
         />
         <BuilderWorkspace
@@ -119,8 +122,10 @@ export function ResumeBuilder() {
           isMobileLayout={isMobileLayout}
           mobileMode={mobileMode}
           onActivePanelChange={handleActivePanelChange}
+          onPaperSizeChange={setPaperSizeKey}
           onMobileModeChange={handleMobileModeChange}
           onSettingsChange={setSectionSettings}
+          paperSizeKey={paperSizeKey}
         />
         <ConfirmResumeDialog
           action={confirmAction}
